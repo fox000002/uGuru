@@ -76,7 +76,7 @@ void fetch_server_info(struct mg_connection *conn,
 
     mg_printf(conn, "%s", standard_xml_reply);
     mg_printf(conn,
-	    "<guru>"
+        "<guru>"
         "<sysinfo>"
         "<cpu_number>%d</cpu_number>"
         "</sysinfo>"
@@ -92,7 +92,7 @@ void fetch_server_state(struct mg_connection *conn,
     TiXmlDocument doc("server.xml");
 
     TiXmlDocument cfg("solver.xml");
-    
+
     if (cfg.LoadFile() && doc.LoadFile())
     {
 
@@ -118,26 +118,26 @@ void fetch_server_state(struct mg_connection *conn,
 void query_running_data(struct mg_connection *conn,
     const struct mg_request_info *ri)
 {
-	switch (g_tqs)
-	{
+    switch (g_tqs)
+    {
     case TQS_EMPTY:
         {
-		    mg_printf(conn, "%s", standard_xml_reply);
-		    mg_printf(conn, "<uGuru>"
-			    "<qstatus>%d</qstatus>"
-			    "<error>No Running Task</error>"
-			    "</uGuru>",
-			    g_tqs);
-		    return;
-	    }
+            mg_printf(conn, "%s", standard_xml_reply);
+            mg_printf(conn, "<uGuru>"
+                "<qstatus>%d</qstatus>"
+                "<error>No Running Task</error>"
+                "</uGuru>",
+                g_tqs);
+            return;
+        }
     case TQS_PENDING:
         {
             mg_printf(conn, "%s", standard_xml_reply);
-            mg_printf(conn, 
+            mg_printf(conn,
                 "<uGuru>"
                 "<qstatus>%d</qstatus>"
                 "<msg>Task files are missing</msg>"
-                "</uGuru>", 
+                "</uGuru>",
                 g_tqs);
 
             return;
@@ -145,11 +145,11 @@ void query_running_data(struct mg_connection *conn,
     case TQS_READY:
         {
             mg_printf(conn, "%s", standard_xml_reply);
-            mg_printf(conn, 
+            mg_printf(conn,
                 "<uGuru>"
                 "<qstatus>%d</qstatus>"
                 "<msg>TaskQueue is ready to start</msg>"
-                "</uGuru>", 
+                "</uGuru>",
                 g_tqs);
 
             return;
@@ -181,11 +181,11 @@ void query_running_data(struct mg_connection *conn,
             if (all_tasks_to_string(buffer))
             {
                 mg_printf(conn, "%s", standard_xml_reply);
-                mg_printf(conn, 
+                mg_printf(conn,
                     "<uGuru>"
                     "<qstatus>%d</qstatus>"
                     "<error>Failed to convert task to XML. Check DEBUG.LOG please!</error>"
-                    "</uGuru>", 
+                    "</uGuru>",
                     g_tqs);
                 return;
             }
@@ -200,11 +200,11 @@ void query_running_data(struct mg_connection *conn,
     case  TQS_ABORT:
         {
             mg_printf(conn, "%s", standard_xml_reply);
-            mg_printf(conn, 
+            mg_printf(conn,
                 "<uGuru>"
                 "<qstatus>%d</qstatus>"
                 "<error>TaskQueue is aborted.</msg>"
-                "</uGuru>", 
+                "</uGuru>",
                 g_tqs);
 
             return;
@@ -212,11 +212,11 @@ void query_running_data(struct mg_connection *conn,
     default:
         {
             mg_printf(conn, "%s", standard_xml_reply);
-            mg_printf(conn, 
+            mg_printf(conn,
                 "<uGuru>"
                 "<qstatus>%d</qstatus>"
                 "<msg>Unknown status</msg>"
-                "</uGuru>", 
+                "</uGuru>",
                 g_tqs);
 
             return;
@@ -232,7 +232,7 @@ void force_terminate(struct mg_connection *conn,
     if (stop_all_job())
     {
         mg_printf(conn, "%s", standard_xml_reply);
-        mg_printf(conn, 
+        mg_printf(conn,
             "<uGuru>"
             "<qstatus>%d</qstatus>"
             "<error>Teminating tasks failed</error>"
@@ -242,7 +242,7 @@ void force_terminate(struct mg_connection *conn,
     }
 
     mg_printf(conn, "%s", standard_xml_reply);
-    mg_printf(conn, 
+    mg_printf(conn,
         "<uGuru>"
         "<qstatus>%d</qstatus>"
         "<response>OK</response>"
@@ -257,20 +257,20 @@ void download_file(struct mg_connection *conn, const struct mg_request_info *ri)
     if (download_http_file("127.0.0.1", 8080, "/config.xml", "download.dat"))
     {
         mg_printf(conn, "%s", standard_xml_reply);
-        mg_printf(conn, 
+        mg_printf(conn,
             "<uGuru>"
             "<error>Download Failed</error>"
             "</uGuru>");
         return;
     }
 
-    
+
     mg_printf(conn, "%s", standard_xml_reply);
-    mg_printf(conn, 
+    mg_printf(conn,
         "<uGuru>"
         "<response>OK</response>"
         "</uGuru>");
-     
+
     UNREFERENCED_PARAMETER(ri)
 }
 
@@ -281,7 +281,7 @@ void debug_info( struct mg_connection *conn, const struct mg_request_info *ri )
     if (!pfDebug)
     {
         mg_printf(conn, "%s", standard_xml_reply);
-        mg_printf(conn, 
+        mg_printf(conn,
             "<uGuru>"
             "<error>Failed to open file DEBUG.OUT</error>"
             "</uGuru>");
@@ -290,10 +290,10 @@ void debug_info( struct mg_connection *conn, const struct mg_request_info *ri )
     }
 
     mg_printf(conn, "%s", standard_reply);
-    
+
     while (fgets(buffer, 1024, pfDebug))
     {
-        mg_printf(conn,"%s", buffer);    
+        mg_printf(conn,"%s", buffer);
     }
 
     fclose(pfDebug);

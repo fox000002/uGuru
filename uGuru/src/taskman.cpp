@@ -42,7 +42,7 @@ int add_to_queue(TaskPtr t)
         LOG_STRING("Task %d duplicated!!", t->id);
         return -1;
     }
-    
+
     qu.push(t);
     tasklist.push_back(t);
     return 0;
@@ -94,7 +94,7 @@ static void callback(void * data)
     {
         return;
     }
-    
+
 //    TaskPtr t = (TaskPtr)data;
 
 //    t->ts = TS_ABORT;
@@ -129,22 +129,22 @@ int run_task( TaskPtr t )
 
 int is_no_task()
 {
-	if (0 == qu.size())
-	{
+    if (0 == qu.size())
+    {
         return 1;
-	}
-	return 0;
+    }
+    return 0;
 }
 
 
 int is_task_processing()
 {
-	if (0 == qu.size())
-	{
+    if (0 == qu.size())
+    {
         return 0;
-	}
+    }
 
-	if (TS_RUNNING == qu.front()->ts)
+    if (TS_RUNNING == qu.front()->ts)
     {
         return 1;
     }
@@ -165,8 +165,8 @@ int is_task_already_exist(TaskPtr t)
         if (t->id == p->id)
         {
             return 1;
-        }      
-    } 
+        }
+    }
     return 0;
 }
 
@@ -182,13 +182,13 @@ static int parse_url(const char *url, char *host, int *port)
 //
 int tasks_from_string( const char * buffer )
 {
-    
+
     if (NULL == buffer)
     {
         LOG_STRING("Passing NULL to tasks_from_string");
         return -1;
     }
-    
+
     TiXmlDocument xdoc;
 
 
@@ -197,7 +197,7 @@ int tasks_from_string( const char * buffer )
         LOG_STRING("Failed to parse XML: %s", buffer);
         return -2;
     }
-    
+
     TiXmlElement * root = xdoc.RootElement();
 
     if (0 == root)
@@ -212,7 +212,7 @@ int tasks_from_string( const char * buffer )
         return -1;
     }
 
-    for (TiXmlElement *task=root->FirstChildElement(); task; 
+    for (TiXmlElement *task=root->FirstChildElement(); task;
         task = task->NextSiblingElement())
     {
         TaskPtr p = new Task();
@@ -229,17 +229,17 @@ int tasks_from_string( const char * buffer )
             {
                 LOG_STRING("Failed to parse url : %s", url);
             }
-        
+
             LOG_STRING("Get %s : %d", p->from.ip, p->from.port);
         }
-        
-        
+
+
 
         p->id = atoi(task->FirstChildElement("id")->FirstChild()->Value());
         strcpy(p->name, task->FirstChildElement("name")->FirstChild()->Value());
         p->sid = atoi(task->FirstChildElement("sid")->FirstChild()->Value());
         strcpy(p->subdir, task->FirstChildElement("subdir")->FirstChild()->Value());
-        
+
 
         add_to_queue(p);
     }
@@ -269,12 +269,12 @@ int front_task_to_string(char * buffer)
     }
 
     TaskPtr p = qu.front();
-    
+
     if (p == NULL)
     {
         return -2;
     }
-    
+
     int s = (int)p->ts;
 
     sprintf(buffer, "<Tasks>"
@@ -304,7 +304,7 @@ int all_tasks_to_string( char *buffer )
         LOG_STRING("Tasklist is empty!!");
         return -2;
     }
-    
+
     UString tmp = "";
     char buf[1024];
     TaskPtr p;
@@ -328,7 +328,7 @@ int all_tasks_to_string( char *buffer )
             "</task>",
             p->id, p->name, p->sid, p->subdir, TaskStateText[s]);
         tmp += buf;
-    } 
+    }
     tmp += "</Tasks>";
 
     sprintf(buffer, "%s", tmp.c_str());
@@ -343,7 +343,7 @@ int stop_all_job()
         LOG_STRING("No task in queue to stop.");
         return -1;
     }
-    
+
     g_tqs = TQS_ABORT;
 
     return 0;
@@ -356,7 +356,7 @@ int download_task_files( TaskPtr t )
         LOG_STRING("Passing NULL to download_task_files");
         return -1;
     }
-    
+
     if (strlen(t->from.ip) || t->from.port == 0)
     {
         LOG_STRING("IP or Port in Task is missing!");

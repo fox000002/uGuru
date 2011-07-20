@@ -21,7 +21,7 @@ int solver_from_string( const char *str, SolverPtr s )
         LOG_STRING("Passing NULL to solver_from_string");
         return -1;
     }
-    
+
     TiXmlDocument xdoc;
 
     if (NULL == xdoc.Parse(str))
@@ -29,7 +29,7 @@ int solver_from_string( const char *str, SolverPtr s )
         LOG_STRING("Failed to parse XML: %s", str);
         return -2;
     }
-    
+
     TiXmlElement * root = xdoc.RootElement();
 
     if (0 == root)
@@ -44,15 +44,15 @@ int solver_from_string( const char *str, SolverPtr s )
         return -1;
     }
 
-    for (TiXmlElement *solver=root->FirstChildElement(); solver; 
+    for (TiXmlElement *solver=root->FirstChildElement(); solver;
         solver = solver->NextSiblingElement())
     {
         s->id = atoi(solver->FirstChildElement("id")->FirstChild()->Value());
         strcpy(s->name, solver->FirstChildElement("name")->FirstChild()->Value());
         strcpy(s->command, solver->FirstChildElement("command")->FirstChild()->Value());
         strcpy(s->arg, solver->FirstChildElement("arg")->FirstChild()->Value());
-    } 	
-	
+    }
+
     return 0;
 }
 
@@ -64,7 +64,7 @@ const char * solver_to_string( const struct Solver *s, char *str )
         return NULL;
     }
 
-	sprintf(str, "<Solvers>"
+    sprintf(str, "<Solvers>"
         "<solver>"
         "<id>%d</id>"
         "<name>%s</name>"
@@ -73,8 +73,8 @@ const char * solver_to_string( const struct Solver *s, char *str )
         "</solver>"
         "</Solvers>",
         s->id, s->name, s->command, s->arg);
-	
-	
+
+
     return str;
 }
 
@@ -104,11 +104,11 @@ int init_solvers( const char * fn )
     }
 
 
-    for (TiXmlElement *solver=root->FirstChildElement(); solver; 
+    for (TiXmlElement *solver=root->FirstChildElement(); solver;
         solver = solver->NextSiblingElement())
     {
         SolverPtr p = new Solver();
-        
+
         p->id = atoi(solver->FirstChildElement("id")->FirstChild()->Value());
         strcpy(p->name, solver->FirstChildElement("name")->FirstChild()->Value());
 
@@ -116,9 +116,9 @@ int init_solvers( const char * fn )
         strcpy(p->arg, solver->FirstChildElement("command")->FirstAttribute()->Value());
 
         solvers[p->id] = p;
-     }   
-	 
-	 return 0;
+     }
+
+     return 0;
 }
 
 void clear_solvers()

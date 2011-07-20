@@ -38,9 +38,9 @@ extern "C" {
 int is_win()
 {
 #ifdef _WIN32
-	return 1;
+    return 1;
 #else
-	return 0;
+    return 0;
 #endif
 }
 
@@ -51,7 +51,7 @@ int is_32()
 
 int is_win32()
 {
-	return is_win() && is_32();
+    return is_win() && is_32();
 }
 
 int cpu_num()

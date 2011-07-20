@@ -12,7 +12,7 @@ class FileHolder
 public:
     FileHolder()
     {
-        int i;   
+        int i;
 
         //++
         GetModuleFileName(NULL, path, sizeof(path));
@@ -27,7 +27,7 @@ public:
         }
 
         strcat(path, "\\DEBUG.OUT");
-        
+
         pf = fopen(path, "w");
     }
 
@@ -176,7 +176,7 @@ LPTSTR *WINAPI CommandLineToArgv(LPCTSTR lpCmdLine, int *lpArgc)
     // Count the number of arguments
     while (nNames < 4)
     {
-        if (*lpSrc == 0 || (*lpSrc == _T(',') && nNames == 2) 
+        if (*lpSrc == 0 || (*lpSrc == _T(',') && nNames == 2)
                 || ((*lpSrc == _T(' ') || *lpSrc == _T('\t')) && !bInQuotes))
         {
             // Whitespace not enclosed in quotes signals the start of another argument
@@ -319,102 +319,102 @@ LPTSTR *WINAPI CommandLineToArgv(LPCTSTR lpCmdLine, int *lpArgc)
 
 BOOL startProgramCallback( const char *cmdline, const char *wdir, BOOL bWait, PFSpCallback pfc)
 {
-		STARTUPINFO si;
-		PROCESS_INFORMATION pi;
-		BOOL bResult;
-		
-		::ZeroMemory( &si, sizeof(STARTUPINFO) );
-		si.cb = sizeof(si);
-		si.dwFlags=STARTF_USESHOWWINDOW;
-		si.wShowWindow=SW_HIDE;
-		
-		::ZeroMemory( &pi, sizeof(PROCESS_INFORMATION) );
-		
-		bResult = ::CreateProcess(NULL,
-			(TCHAR *)cmdline,
-			NULL,
-			NULL,
-			TRUE,
-			NORMAL_PRIORITY_CLASS,
-			NULL,
-			wdir,
-			&si,
-			&pi);
-		
-		if (!bResult)
-		{
-			fprintf(stderr, "Failed to start %s\n", cmdline);
-			LOG_STRING("Failed to start %s", cmdline);
+        STARTUPINFO si;
+        PROCESS_INFORMATION pi;
+        BOOL bResult;
 
-			if (pfc)
-			{
-				pfc();
-			}
+        ::ZeroMemory( &si, sizeof(STARTUPINFO) );
+        si.cb = sizeof(si);
+        si.dwFlags=STARTF_USESHOWWINDOW;
+        si.wShowWindow=SW_HIDE;
 
-			::ExitThread(123);
-			return FALSE;
-		}
-		
-		if (bWait)
-		{
-			::WaitForSingleObject(pi.hProcess, INFINITE);
-		}
-		
-		//g_hChildProcess = pi.hProcess;
-		
-		CloseHandle(pi.hThread);
-		CloseHandle(pi.hProcess);
-		return TRUE;
+        ::ZeroMemory( &pi, sizeof(PROCESS_INFORMATION) );
+
+        bResult = ::CreateProcess(NULL,
+            (TCHAR *)cmdline,
+            NULL,
+            NULL,
+            TRUE,
+            NORMAL_PRIORITY_CLASS,
+            NULL,
+            wdir,
+            &si,
+            &pi);
+
+        if (!bResult)
+        {
+            fprintf(stderr, "Failed to start %s\n", cmdline);
+            LOG_STRING("Failed to start %s", cmdline);
+
+            if (pfc)
+            {
+                pfc();
+            }
+
+            ::ExitThread(123);
+            return FALSE;
+        }
+
+        if (bWait)
+        {
+            ::WaitForSingleObject(pi.hProcess, INFINITE);
+        }
+
+        //g_hChildProcess = pi.hProcess;
+
+        CloseHandle(pi.hThread);
+        CloseHandle(pi.hProcess);
+        return TRUE;
 }
 
 BOOL startProgramCallbackParam( const char *cmdline, const char *wdir, BOOL bWait, PFSpCallbackParam pfc, void * data)
 {
-		STARTUPINFO si;
-		PROCESS_INFORMATION pi;
-		BOOL bResult;
-		
-		::ZeroMemory( &si, sizeof(STARTUPINFO) );
-		si.cb = sizeof(si);
-		si.dwFlags=STARTF_USESHOWWINDOW;
-		si.wShowWindow=SW_HIDE;
-		
-		::ZeroMemory( &pi, sizeof(PROCESS_INFORMATION) );
-		
-		bResult = ::CreateProcess(NULL,
-			(TCHAR *)cmdline,
-			NULL,
-			NULL,
-			TRUE,
-			NORMAL_PRIORITY_CLASS,
-			NULL,
-			wdir,
-			&si,
-			&pi);
-		
-		if (!bResult)
-		{
-			fprintf(stderr, "Failed to start %s\n", cmdline);
-			LOG_STRING("Failed to start %s", cmdline);
+        STARTUPINFO si;
+        PROCESS_INFORMATION pi;
+        BOOL bResult;
 
-			if (pfc)
-			{
-				pfc(data);
-			}
+        ::ZeroMemory( &si, sizeof(STARTUPINFO) );
+        si.cb = sizeof(si);
+        si.dwFlags=STARTF_USESHOWWINDOW;
+        si.wShowWindow=SW_HIDE;
 
-			//::ExitThread(123);
-			return FALSE;
-		}
-		
-		if (bWait)
-		{
-			::WaitForSingleObject(pi.hProcess, INFINITE);
-		}
-		
-		//g_hChildProcess = pi.hProcess;
-		
-		CloseHandle(pi.hThread);
-		CloseHandle(pi.hProcess);
-		return TRUE;
+        ::ZeroMemory( &pi, sizeof(PROCESS_INFORMATION) );
+
+        bResult = ::CreateProcess(NULL,
+            (TCHAR *)cmdline,
+            NULL,
+            NULL,
+            TRUE,
+            NORMAL_PRIORITY_CLASS,
+            NULL,
+            wdir,
+            &si,
+            &pi);
+
+        if (!bResult)
+        {
+            fprintf(stderr, "Failed to start %s\n", cmdline);
+            LOG_STRING("Failed to start %s", cmdline);
+
+            if (pfc)
+            {
+                pfc(data);
+            }
+
+            //::ExitThread(123);
+            return FALSE;
+        }
+
+        if (bWait)
+        {
+            ::WaitForSingleObject(pi.hProcess, INFINITE);
+        }
+
+        //g_hChildProcess = pi.hProcess;
+
+        CloseHandle(pi.hThread);
+        CloseHandle(pi.hProcess);
+        return TRUE;
 }
 
 

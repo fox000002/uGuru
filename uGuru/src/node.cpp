@@ -44,7 +44,7 @@ int node_from_string(const char * str, XNodePtr p)
         return -1;
     }
 
-    for (TiXmlElement *node=root->FirstChildElement(); node; 
+    for (TiXmlElement *node=root->FirstChildElement(); node;
         node = node->NextSiblingElement())
     {
         strcpy(p->ip, node->FirstChildElement("ip")->FirstChild()->Value());
@@ -52,7 +52,7 @@ int node_from_string(const char * str, XNodePtr p)
         strcpy(p->name, node->FirstChildElement("name")->FirstChild()->Value());
     }
 
-	return 0;
+    return 0;
 }
 
 
@@ -72,8 +72,8 @@ const char * node_to_string(XNodePtr p, char * str)
         "</node>"
         "</Nodes>",
         p->ip, p->port, p->name);
-	
-	return 0;
+
+    return 0;
 }
 
 }
