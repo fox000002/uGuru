@@ -1,0 +1,14 @@
+<Configuration>
+<Server>
+    <document_root>E:\devel\network\uGuru\working</document_root>
+    <port>8080</port>
+</Server>
+<Solvers>
+  <solver id="1" name="potential">
+    <command arg="WF.INP">BLWFNew.exe</command>
+  </solver>
+  <solver id="2" name="ns_solver">
+    <command arg="WF.INP">ns.exe</command>
+  </solver>
+</Solvers>
+</Configuration>

@@ -1,0 +1,8 @@
+<Solvers>
+<solver id="1" name="potential">
+<command arg="WF.INP">BLWFNew.exe</command>
+</solver>
+<solver id="2" name="ns_solver">
+<command arg="WF.INP">ns.exe</command>
+</solver>
+</Solvers>

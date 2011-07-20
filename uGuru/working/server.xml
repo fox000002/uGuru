@@ -1,0 +1,4 @@
+<Server>
+    <document_root>E:\devel\network\uGuru</document_root>
+    <port>8080</port>
+</Server>
