@@ -6,12 +6,12 @@ int main()
 {
 	TiXmlDocument xdoc;
 	
-	const char *p = xdoc.Parse("<Tasks>333</Tasks>");
+	const char * p = xdoc.Parse("<X><Tasks>333</Tasks></X>\n");
 	
 	TiXmlElement * root = xdoc.RootElement();
 
 
-    printf("Element Tasks is expected, but find : %s\n", root->Value());
+    printf("Element Tasks is expected. Find : %s\n", root->Value());
 
 	printf("P : %p\n", p);
 
