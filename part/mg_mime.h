@@ -10,4 +10,9 @@ struct MIME_Type {
 
 extern const struct MIME_Type builtin_mime_types[];
 
+// Look at the "path" extension and figure what mime type it has.
+// Store mime type in the vector.
+void get_mime_type(struct mg_context *ctx, const char *path,
+                          struct vec *vec);
+
 #endif /* MG_MIME_H */

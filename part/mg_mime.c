@@ -1,4 +1,12 @@
 #include "mg_defs.h"
+#include "mg_pthread.h"
+#include "mongoose.h"
+#include "mg_ssl.h"
+#include "mg_socket.h"
+
+#include "mg_config.h"
+
+#include "mg_string.h"
 
 #include "mg_mime.h"
 
@@ -44,3 +52,41 @@ const struct MIME_Type builtin_mime_types[] = {
   {NULL,  0, NULL,    0}
 };
 
+// Look at the "path" extension and figure what mime type it has.
+// Store mime type in the vector.
+void get_mime_type(struct mg_context *ctx, const char *path,
+                          struct vec *vec)
+{
+  struct vec ext_vec, mime_vec;
+  const char *list, *ext;
+  size_t i, path_len;
+
+  path_len = strlen(path);
+
+  // Scan user-defined mime types first, in case user wants to
+  // override default mime types.
+  list = ctx->config[EXTRA_MIME_TYPES];
+  while ((list = next_option(list, &ext_vec, &mime_vec)) != NULL) {
+    // ext now points to the path suffix
+    ext = path + path_len - ext_vec.len;
+    if (mg_strncasecmp(ext, ext_vec.ptr, ext_vec.len) == 0) {
+      *vec = mime_vec;
+      return;
+    }
+  }
+
+  // Now scan built-in mime types
+  for (i = 0; builtin_mime_types[i].extension != NULL; i++) {
+    ext = path + (path_len - builtin_mime_types[i].ext_len);
+    if (path_len > builtin_mime_types[i].ext_len &&
+        mg_strcasecmp(ext, builtin_mime_types[i].extension) == 0) {
+      vec->ptr = builtin_mime_types[i].mime_type;
+      vec->len = builtin_mime_types[i].mime_type_len;
+      return;
+    }
+  }
+
+  // Nothing found. Fall back to "text/plain"
+  vec->ptr = "text/plain";
+  vec->len = 10;
+}

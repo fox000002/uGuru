@@ -28,129 +28,28 @@
 
 #include "mg_version.h"
 
-#define PASSWORDS_FILE_NAME ".htpasswd"
-#define CGI_ENVIRONMENT_SIZE 4096
-#define MAX_CGI_ENVIR_VARS 64
-
 #include "mg_debug.h"
-
-// Darwin prior to 7.0 and Win32 do not have socklen_t
-#ifdef NO_SOCKLEN_T
-typedef int socklen_t;
-#endif // NO_SOCKLEN_T
-
 
 static const char *http_500_error = "Internal Server Error";
 
 #include "mg_ssl.h"
 
-static const char *month_names[] = {
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-};
-
-// Unified socket address. For IPv6 support, add IPv6 address structure
-// in the union u.
-struct usa {
-  socklen_t len;
-  union {
-    struct sockaddr sa;
-    struct sockaddr_in sin;
-  } u;
-};
-
-// Describes a string (chunk of memory).
-struct vec {
-  const char *ptr;
-  size_t len;
-};
-
-// Structure used by mg_stat() function. Uses 64 bit file length.
-struct mgstat {
-  int is_directory;  // Directory marker
-  int64_t size;      // File size
-  time_t mtime;      // Modification time
-};
-
-// Describes listening socket, or socket which was accept()-ed by the master
-// thread and queued for future handling by the worker thread.
-struct socket {
-  struct socket *next;  // Linkage
-  SOCKET sock;          // Listening socket
-  struct usa lsa;       // Local socket address
-  struct usa rsa;       // Remote socket address
-  int is_ssl;           // Is socket SSL-ed
-  int is_proxy;
-};
+#include "mg_socket.h"
 
 #include "mg_config.h"
 
-struct mg_context {
-  int stop_flag;                // Should we stop event loop
-  SSL_CTX *ssl_ctx;             // SSL context
-  char *config[NUM_OPTIONS];    // Mongoose configuration parameters
-  mg_callback_t user_callback;  // User-defined callback function
+#include "mg_time.h"
 
-  struct socket *listening_sockets;
 
-  int num_threads;           // Number of threads
-  pthread_mutex_t mutex;     // Protects (max|num)_threads
-  pthread_cond_t  cond;      // Condvar for tracking workers terminations
 
-  struct socket queue[20];   // Accepted sockets
-  int sq_head;               // Head of the socket queue
-  int sq_tail;               // Tail of the socket queue
-  pthread_cond_t sq_full;    // Singaled when socket is produced
-  pthread_cond_t sq_empty;   // Signaled when socket is consumed
-};
-
-struct mg_connection {
-  struct mg_connection *peer; // Remote target in proxy mode
-  struct mg_request_info request_info;
-  struct mg_context *ctx;
-  SSL *ssl;                   // SSL descriptor
-  struct socket client;       // Connected client
-  time_t birth_time;          // Time connection was accepted
-  int64_t num_bytes_sent;     // Total bytes sent to client
-  int64_t content_len;        // Content-Length header value
-  int64_t consumed_content;   // How many bytes of content is already read
-  char *buf;                  // Buffer for received data
-  int buf_size;               // Buffer size
-  int request_len;            // Size of the request + headers in a buffer
-  int data_len;               // Total size of data in a buffer
-};
-
-const char **mg_get_valid_option_names(void) {
-  return config_options;
-}
-
-static void *call_user(struct mg_connection *conn, enum mg_event event) {
+static void *call_user(struct mg_connection *conn, enum mg_event event)
+{
   return conn->ctx->user_callback == NULL ? NULL :
     conn->ctx->user_callback(event, conn, &conn->request_info);
 }
 
-static int get_option_index(const char *name) {
-  int i;
 
-  for (i = 0; config_options[i] != NULL; i += ENTRIES_PER_CONFIG_OPTION) {
-    if (strcmp(config_options[i], name) == 0 ||
-        strcmp(config_options[i + 1], name) == 0) {
-      return i / ENTRIES_PER_CONFIG_OPTION;
-    }
-  }
-  return -1;
-}
 
-const char *mg_get_option(const struct mg_context *ctx, const char *name) {
-  int i;
-  if ((i = get_option_index(name)) == -1) {
-    return NULL;
-  } else if (ctx->config[i] == NULL) {
-    return "";
-  } else {
-    return ctx->config[i];
-  }
-}
 
 // Print error message to the opened error log stream.
 void cry(struct mg_connection *conn, const char *fmt, ...) {
@@ -230,46 +129,7 @@ const char *mg_get_header(const struct mg_connection *conn, const char *name) {
   return get_header(&conn->request_info, name);
 }
 
-// A helper function for traversing comma separated list of values.
-// It returns a list pointer shifted to the next value, of NULL if the end
-// of the list found.
-// Value is stored in val vector. If value has form "x=y", then eq_val
-// vector is initialized to point to the "y" part, and val vector length
-// is adjusted to point only to "x".
-static const char *next_option(const char *list, struct vec *val,
-                               struct vec *eq_val) {
-  if (list == NULL || *list == '\0') {
-    /* End of the list */
-    list = NULL;
-  } else {
-    val->ptr = list;
-    if ((list = strchr(val->ptr, ',')) != NULL) {
-      /* Comma found. Store length and shift the list ptr */
-      val->len = list - val->ptr;
-      list++;
-    } else {
-      /* This value is the last one */
-      list = val->ptr + strlen(val->ptr);
-      val->len = list - val->ptr;
-    }
 
-    if (eq_val != NULL) {
-      /*
-       * Value has form "x=y", adjust pointers and lengths
-       * so that val points to "x", and eq_val points to "y".
-       */
-      eq_val->len = 0;
-      eq_val->ptr = memchr(val->ptr, '=', val->len);
-      if (eq_val->ptr != NULL) {
-        eq_val->ptr++;  /* Skip over '=' character */
-        eq_val->len = val->ptr + val->len - eq_val->ptr;
-        val->len = (eq_val->ptr - val->ptr) - 1;
-      }
-    }
-  }
-
-  return list;
-}
 
 #if !defined(NO_CGI)
 static int match_extension(const char *path, const char *ext_list)
@@ -1051,57 +911,8 @@ static int get_request_len(const char *buf, int buflen) {
   return len;
 }
 
-// Convert month to the month number. Return -1 on error, or month number
-static int month_number_to_month_name(const char *s) {
-  size_t i;
 
-  for (i = 0; i < ARRAY_SIZE(month_names); i++)
-    if (!strcmp(s, month_names[i]))
-      return (int) i;
 
-  return -1;
-}
-
-// Parse date-time string, and return the corresponding time_t value
-static time_t parse_date_string(const char *s) {
-  time_t current_time;
-  struct tm tm, *tmp;
-  char mon[32];
-  int sec, min, hour, mday, month, year;
-
-  (void) memset(&tm, 0, sizeof(tm));
-  sec = min = hour = mday = month = year = 0;
-
-  if (((sscanf(s, "%d/%3s/%d %d:%d:%d",
-            &mday, mon, &year, &hour, &min, &sec) == 6) ||
-        (sscanf(s, "%d %3s %d %d:%d:%d",
-                &mday, mon, &year, &hour, &min, &sec) == 6) ||
-        (sscanf(s, "%*3s, %d %3s %d %d:%d:%d",
-                &mday, mon, &year, &hour, &min, &sec) == 6) ||
-        (sscanf(s, "%d-%3s-%d %d:%d:%d",
-                &mday, mon, &year, &hour, &min, &sec) == 6)) &&
-      (month = month_number_to_month_name(mon)) != -1) {
-    tm.tm_mday = mday;
-    tm.tm_mon = month;
-    tm.tm_year = year;
-    tm.tm_hour = hour;
-    tm.tm_min = min;
-    tm.tm_sec = sec;
-  }
-
-  if (tm.tm_year > 1900) {
-    tm.tm_year -= 1900;
-  } else if (tm.tm_year < 70) {
-    tm.tm_year += 100;
-  }
-
-  // Set Daylight Saving Time field
-  current_time = time(NULL);
-  tmp = localtime(&current_time);
-  tm.tm_isdst = tmp->tm_isdst;
-
-  return mktime(&tm);
-}
 
 // Protect against directory disclosure attack by removing '..',
 // excessive '/' and '\' characters
@@ -1127,43 +938,7 @@ static void remove_double_dots_and_double_slashes(char *s) {
 
 #include "mg_mime.h"
 
-// Look at the "path" extension and figure what mime type it has.
-// Store mime type in the vector.
-static void get_mime_type(struct mg_context *ctx, const char *path,
-                          struct vec *vec) {
-  struct vec ext_vec, mime_vec;
-  const char *list, *ext;
-  size_t i, path_len;
 
-  path_len = strlen(path);
-
-  // Scan user-defined mime types first, in case user wants to
-  // override default mime types.
-  list = ctx->config[EXTRA_MIME_TYPES];
-  while ((list = next_option(list, &ext_vec, &mime_vec)) != NULL) {
-    // ext now points to the path suffix
-    ext = path + path_len - ext_vec.len;
-    if (mg_strncasecmp(ext, ext_vec.ptr, ext_vec.len) == 0) {
-      *vec = mime_vec;
-      return;
-    }
-  }
-
-  // Now scan built-in mime types
-  for (i = 0; builtin_mime_types[i].extension != NULL; i++) {
-    ext = path + (path_len - builtin_mime_types[i].ext_len);
-    if (path_len > builtin_mime_types[i].ext_len &&
-        mg_strcasecmp(ext, builtin_mime_types[i].extension) == 0) {
-      vec->ptr = builtin_mime_types[i].mime_type;
-      vec->len = builtin_mime_types[i].mime_type_len;
-      return;
-    }
-  }
-
-  // Nothing found. Fall back to "text/plain"
-  vec->ptr = "text/plain";
-  vec->len = 10;
-}
 
 
 #ifndef HAVE_MD5
