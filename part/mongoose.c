@@ -26,7 +26,8 @@
 
 #include "mg_file.h"
 
-#define MONGOOSE_VERSION "2.11"
+#include "mg_version.h"
+
 #define PASSWORDS_FILE_NAME ".htpasswd"
 #define CGI_ENVIRONMENT_SIZE 4096
 #define MAX_CGI_ENVIR_VARS 64
@@ -82,43 +83,7 @@ struct socket {
   int is_proxy;
 };
 
-enum {
-  CGI_EXTENSIONS, CGI_ENVIRONMENT, PUT_DELETE_PASSWORDS_FILE, CGI_INTERPRETER,
-  PROTECT_URI, AUTHENTICATION_DOMAIN, SSI_EXTENSIONS, ACCESS_LOG_FILE,
-  SSL_CHAIN_FILE, ENABLE_DIRECTORY_LISTING, ERROR_LOG_FILE,
-  GLOBAL_PASSWORDS_FILE, INDEX_FILES,
-  ENABLE_KEEP_ALIVE, ACCESS_CONTROL_LIST, MAX_REQUEST_SIZE,
-  EXTRA_MIME_TYPES, LISTENING_PORTS,
-  DOCUMENT_ROOT, SSL_CERTIFICATE, NUM_THREADS, RUN_AS_USER,
-  NUM_OPTIONS
-};
-
-static const char *config_options[] = {
-  "C", "cgi_extensions", ".cgi,.pl,.php",
-  "E", "cgi_environment", NULL,
-  "G", "put_delete_passwords_file", NULL,
-  "I", "cgi_interpreter", NULL,
-  "P", "protect_uri", NULL,
-  "R", "authentication_domain", "mydomain.com",
-  "S", "ssi_extensions", ".shtml,.shtm",
-  "a", "access_log_file", NULL,
-  "c", "ssl_chain_file", NULL,
-  "d", "enable_directory_listing", "yes",
-  "e", "error_log_file", NULL,
-  "g", "global_passwords_file", NULL,
-  "i", "index_files", "index.html,index.htm,index.cgi",
-  "k", "enable_keep_alive", "no",
-  "l", "access_control_list", NULL,
-  "M", "max_request_size", "16384",
-  "m", "extra_mime_types", NULL,
-  "p", "listening_ports", "8080",
-  "r", "document_root",  ".",
-  "s", "ssl_certificate", NULL,
-  "t", "num_threads", "10",
-  "u", "run_as_user", NULL,
-  NULL
-};
-#define ENTRIES_PER_CONFIG_OPTION 3
+#include "mg_config.h"
 
 struct mg_context {
   int stop_flag;                // Should we stop event loop
@@ -247,10 +212,6 @@ static struct mg_connection *fc(struct mg_context *ctx) {
   return &fake_connection;
 }
 
-const char *mg_version(void) {
-  return MONGOOSE_VERSION;
-}
-
 #include "mg_string.h"
 
 // Return HTTP header value, or NULL if not found.
@@ -311,7 +272,8 @@ static const char *next_option(const char *list, struct vec *val,
 }
 
 #if !defined(NO_CGI)
-static int match_extension(const char *path, const char *ext_list) {
+static int match_extension(const char *path, const char *ext_list)
+{
   struct vec ext_vec;
   size_t path_len;
 
@@ -373,8 +335,6 @@ static void send_http_error(struct mg_connection *conn, int status,
     conn->num_bytes_sent += mg_printf(conn, "%s", buf);
   }
 }
-
-#include "mg_string.h"
 
 #ifdef _WIN32
 
@@ -2104,7 +2064,8 @@ static void prepare_cgi_environment(struct mg_connection *conn,
   assert(blk->len < (int) sizeof(blk->buf));
 }
 
-static void handle_cgi_request(struct mg_connection *conn, const char *prog) {
+static void handle_cgi_request(struct mg_connection *conn, const char *prog)
+{
   int headers_len, data_len, i, fd_stdin[2], fd_stdout[2];
   const char *status;
   char buf[BUFSIZ], *pbuf, dir[PATH_MAX], *p;
@@ -2406,13 +2367,15 @@ static void send_ssi_file(struct mg_connection *conn, const char *path,
   }
 
   // Send the rest of buffered data
-  if (len > 0) {
+  if (len > 0)
+  {
     (void) mg_write(conn, buf, len);
   }
 }
 
 static void handle_ssi_file_request(struct mg_connection *conn,
-                                    const char *path) {
+                                    const char *path)
+{
   FILE *fp;
 
   if ((fp = mg_fopen(path, "rb")) == NULL) {
@@ -2432,7 +2395,8 @@ static void handle_ssi_file_request(struct mg_connection *conn,
 // This function is called when the request is read, parsed and validated,
 // and Mongoose must decide what action to take: serve a file, or
 // a directory, or call embedded function, etcetera.
-static void handle_request(struct mg_connection *conn) {
+static void handle_request(struct mg_connection *conn)
+{
   struct mg_request_info *ri = &conn->request_info;
   char path[PATH_MAX];
   int uri_len;
@@ -2690,7 +2654,8 @@ static int check_acl(struct mg_context *ctx, const struct usa *usa) {
   return allowed == '+';
 }
 
-static void add_to_set(SOCKET fd, fd_set *set, int *max_fd) {
+static void add_to_set(SOCKET fd, fd_set *set, int *max_fd)
+{
   FD_SET(fd, set);
   if (fd > (SOCKET) *max_fd) {
     *max_fd = (int) fd;
@@ -2866,7 +2831,8 @@ static void reset_per_request_attributes(struct mg_connection *conn) {
   conn->request_len = conn->data_len = 0;
 }
 
-static void close_socket_gracefully(SOCKET sock) {
+static void close_socket_gracefully(SOCKET sock)
+{
   char buf[BUFSIZ];
   int n;
 
@@ -2887,7 +2853,8 @@ static void close_socket_gracefully(SOCKET sock) {
   (void) closesocket(sock);
 }
 
-static void close_connection(struct mg_connection *conn) {
+static void close_connection(struct mg_connection *conn)
+{
   if (conn->ssl) {
     SSL_free(conn->ssl);
     conn->ssl = NULL;
@@ -2898,7 +2865,8 @@ static void close_connection(struct mg_connection *conn) {
   }
 }
 
-static void discard_current_request_from_buffer(struct mg_connection *conn) {
+static void discard_current_request_from_buffer(struct mg_connection *conn)
+{
   char *buffered;
   int buffered_len, body_len;
 
@@ -2918,7 +2886,8 @@ static void discard_current_request_from_buffer(struct mg_connection *conn) {
   memmove(conn->buf, conn->buf + conn->request_len + body_len, conn->data_len);
 }
 
-static int parse_url(const char *url, char *host, int *port) {
+static int parse_url(const char *url, char *host, int *port)
+{
   int len;
 
   if (url == NULL) {
@@ -2939,7 +2908,8 @@ static int parse_url(const char *url, char *host, int *port) {
   return len > 0 && url[len - 1] == '/' ? len - 1 : len;
 }
 
-static void handle_proxy_request(struct mg_connection *conn) {
+static void handle_proxy_request(struct mg_connection *conn)
+{
   struct mg_request_info *ri = &conn->request_info;
   char host[1025], buf[BUFSIZ];
   int port, is_ssl, len, i, n;
@@ -2990,7 +2960,8 @@ static void handle_proxy_request(struct mg_connection *conn) {
   }
 }
 
-static void process_new_connection(struct mg_connection *conn) {
+static void process_new_connection(struct mg_connection *conn)
+{
   struct mg_request_info *ri = &conn->request_info;
   int keep_alive_enabled;
   const char *cl;
@@ -3118,7 +3089,8 @@ static void worker_thread(struct mg_context *ctx) {
 }
 
 // Master thread adds accepted socket to a queue
-static void produce_socket(struct mg_context *ctx, const struct socket *sp) {
+static void produce_socket(struct mg_context *ctx, const struct socket *sp)
+{
   (void) pthread_mutex_lock(&ctx->mutex);
 
   // If the queue is full, wait
@@ -3220,7 +3192,8 @@ static void master_thread(struct mg_context *ctx) {
   DEBUG_TRACE(("exiting"));
 }
 
-static void free_context(struct mg_context *ctx) {
+static void free_context(struct mg_context *ctx)
+{
   int i;
 
   // Deallocate config parameters
@@ -3243,7 +3216,8 @@ static void free_context(struct mg_context *ctx) {
   free(ctx);
 }
 
-void mg_stop(struct mg_context *ctx) {
+void mg_stop(struct mg_context *ctx)
+{
   ctx->stop_flag = 1;
 
   // Wait until mg_fini() stops
@@ -3257,7 +3231,8 @@ void mg_stop(struct mg_context *ctx) {
 #endif // _WIN32
 }
 
-struct mg_context *mg_start(mg_callback_t user_callback, const char **options) {
+struct mg_context *mg_start(mg_callback_t user_callback, const char **options)
+{
   struct mg_context *ctx;
   const char *name, *value, *default_value;
   int i;

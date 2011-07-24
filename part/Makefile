@@ -103,9 +103,9 @@ MINGWDBG= -DNDEBUG -Os
 #MINGWOPT= -W -Wall -mthreads -Wl,--subsystem,console $(MINGWDBG) -DHAVE_STDINT
 MINGWOPT= -W -Wall -mthreads -Wl,--subsystem,windows $(MINGWDBG) -DHAVE_STDINT
 mingw:
-	gcc $(MINGWOPT) mongoose.c mg_md5.c mg_pthread.c mg_file.c mg_string.c mg_mime.c -lws2_32 \
+	gcc $(MINGWOPT) mongoose.c mg_md5.c mg_pthread.c mg_file.c mg_string.c mg_mime.c mg_version.c -lws2_32 \
 		-shared -Wl,--out-implib=$(PROG).lib -o _$(PROG).dll
-	gcc $(MINGWOPT) mongoose.c main.c mg_md5.c mg_pthread.c mg_file.c mg_string.c mg_mime.c -lws2_32 -ladvapi32 \
+	gcc $(MINGWOPT) mongoose.c main.c mg_md5.c mg_pthread.c mg_file.c mg_string.c mg_mime.c mg_version.c -lws2_32 -ladvapi32 \
 		-o $(PROG).exe
 
 
@@ -128,4 +128,4 @@ release: clean
 	F=mongoose-`perl -lne '/define\s+MONGOOSE_VERSION\s+"(\S+)"/ and print $$1' mongoose.c`.tgz ; cd .. && tar --exclude \*.hg --exclude \*.svn --exclude \*.swp --exclude \*.nfs\* --exclude win32 -czf x mongoose && mv x mongoose/$$F
 
 clean:
-	rm -vf *.o *.core $(PROG) *.exe *.dll *.obj $(PROG).txt *.dSYM *.tgz
+	rm -vf *.o *.core $(PROG) *.exe *.dll *.lib *.obj $(PROG).txt *.dSYM *.tgz
