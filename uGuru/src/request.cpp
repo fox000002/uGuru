@@ -89,8 +89,17 @@ void fetch_server_info(struct mg_connection *conn,
 void fetch_server_state(struct mg_connection *conn,
     const struct mg_request_info *ri)
 {
-    TiXmlDocument doc("server.xml");
+    //const char * doc_root = mg_get_option(conn->ctx, "document_root");
 
+    //char tmp[MAX_PATH];
+
+    //sprintf(tmp, "%s/server.xml", doc_root);
+    //TiXmlDocument doc(tmp);
+
+    //sprintf(tmp, "%s/solver.xml", doc_root);
+    //TiXmlDocument cfg(tmp);
+
+    TiXmlDocument doc("server.xml");
     TiXmlDocument cfg("solver.xml");
 
     if (cfg.LoadFile() && doc.LoadFile())
