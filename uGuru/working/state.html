@@ -4,10 +4,22 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>uGuru Service State</title>
+<script src="js/jquery.min.js"></script>
 </head>
 <body>
 
-uGuru Service State...
+uGuru Service State
+
+
+
+<script>
+$.get("server_info", function(data){
+alert("Data Loaded: " + data);
+//$('#display').html(data);
+});
+</script>
+
+<div id="display"></div>
 
 </body>
 </html>

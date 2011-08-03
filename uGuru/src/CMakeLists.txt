@@ -14,7 +14,7 @@ link_directories (${UGURU_BINARY_DIR}/lib ${UGURU_SOURCE_DIR}/winhttp)
 #-----------------------------------------------------------------------------
 SET (MONGOOSE_SRCS mongoose.c main.c)
 SET (UGURU_SRCS  global.cpp solver.cpp taskman.cpp node.cpp request.cpp
-    download.c config.cpp sysinfo.cpp base64.cpp log.cpp)
+    download.c config.cpp sysinfo.cpp base64.cpp log.cpp datetime.cpp)
 
 #-----------------------------------------------------------------------------
 #
