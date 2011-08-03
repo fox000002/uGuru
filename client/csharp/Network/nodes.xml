@@ -1,0 +1,12 @@
+<Nodes>
+<node>
+<name>m-007</name>
+<ip>10.83.41.7</ip>
+<port>8080</port>
+</node>
+<node>
+<name>m-011</name>
+<ip>10.83.41.11</ip>
+<port>8080</port>
+</node>
+</Nodes>

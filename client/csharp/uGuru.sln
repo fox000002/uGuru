@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "uGuru", "uGuru\uGuru.csproj", "{704DA5B9-70F8-4CC6-BD8E-5DEBD5658039}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Network", "Network\Network.csproj", "{539A181D-500B-4215-80DF-F66FD7B0AA2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Demo\Demo.csproj", "{0E7ECEDA-710D-48D0-9873-EAE3F6977C06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controls", "Controls\Controls.csproj", "{9C4CA19B-3FED-4561-8034-8743A448ADFB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{704DA5B9-70F8-4CC6-BD8E-5DEBD5658039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{704DA5B9-70F8-4CC6-BD8E-5DEBD5658039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{704DA5B9-70F8-4CC6-BD8E-5DEBD5658039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{704DA5B9-70F8-4CC6-BD8E-5DEBD5658039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{539A181D-500B-4215-80DF-F66FD7B0AA2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{539A181D-500B-4215-80DF-F66FD7B0AA2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{539A181D-500B-4215-80DF-F66FD7B0AA2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{539A181D-500B-4215-80DF-F66FD7B0AA2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E7ECEDA-710D-48D0-9873-EAE3F6977C06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E7ECEDA-710D-48D0-9873-EAE3F6977C06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E7ECEDA-710D-48D0-9873-EAE3F6977C06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E7ECEDA-710D-48D0-9873-EAE3F6977C06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C4CA19B-3FED-4561-8034-8743A448ADFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C4CA19B-3FED-4561-8034-8743A448ADFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C4CA19B-3FED-4561-8034-8743A448ADFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C4CA19B-3FED-4561-8034-8743A448ADFB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
