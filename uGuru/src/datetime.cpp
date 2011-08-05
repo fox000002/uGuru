@@ -29,7 +29,7 @@ const char * mg_gettime()
 const char * mg_getdate()
 {
 
-
+	return NULL;
 }
 
 }

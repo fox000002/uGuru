@@ -26,13 +26,15 @@ window.onload = function()
 	////////////////////////////////////////////////
 	item1 = new TaskMenuItem("Introduction","img/demo.gif","parent.window.frames[1].location.href='intro.html'");
 	item2 = new TaskMenuItem("Functions","img/api.gif","parent.window.frames[1].location.href='detail.html'");
-	item3 = new TaskMenuItem("Solvers","img/copy.gif","parent.window.frames[1].location.href='readme.html'");
+	item3 = new TaskMenuItem("NodeInfo","img/copy.gif","parent.window.frames[1].location.href='info.html'");
 	item4 = new TaskMenuItem("Configuration","img/friends.gif","parent.window.frames[1].location.href='config.html'");
 	item5 = new TaskMenuItem("State","img/dload.gif","parent.window.frames[1].location.href='state.html'");
 	item6 = new TaskMenuItem("Action","img/update.gif","parent.window.frames[1].location.href='action.html'");
 	item7 = new TaskMenuItem("<B>uGuru</B>");
 	item8 = new TaskMenuItem();
 	item8.setLabel("Current Version <b style='color:purple'>0.1</b>");
+	
+	itemx1 = new TaskMenuItem("Log", "img/demo.gif", "parent.window.frames[1].location.href='log.html'");
 
 	////////////////////////////////////////////////
 	taskMenu1 = new TaskMenu("About uGuru Service");
@@ -46,8 +48,9 @@ window.onload = function()
 	taskMenu2.add(item5);
 	taskMenu2.add(item6);
 	taskMenu2.init();
-	taskMenu3 = new TaskMenu("Test");
+	taskMenu3 = new TaskMenu("Statistic");
 	taskMenu3.init();
+	taskMenu3.add(itemx1);
 	taskMenu4 = new TaskMenu("uGuru version");
 	taskMenu4.init();
 	taskMenu4.add(item7);

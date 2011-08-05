@@ -1,6 +1,6 @@
 <Configuration>
 <Server>
-    <document_root>F:\WingOpt\uGuru\working</document_root>
+    <document_root>E:\devel\mongoose\uGuru\trunk\uGuru\working</document_root>
     <port>8080</port>
 </Server>
 <Solvers>
