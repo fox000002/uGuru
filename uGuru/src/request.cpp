@@ -63,6 +63,8 @@ void show_homepage(struct mg_connection *conn, const struct mg_request_info *ri)
         "<a href=\"/server_info\">server infomation</a><br/>"
         "<a href=\"/server_state\">server state</a><br/>"
         "<a href=\"/submit\">submit task</a><br/>"
+        "<a href=\"/start\">prepare files</a><br/>"
+        "<a href=\"/start\">start task processing</a><br/>"
         "<a href=\"/query\">query task</a><br/>"
         "<a href=\"/terminate\">terminate</a><br/>"
         "</body></html>");
@@ -76,11 +78,11 @@ void fetch_server_info(struct mg_connection *conn,
 
     mg_printf(conn, "%s", standard_xml_reply);
     mg_printf(conn,
-        "<guru>"
+        "<uGuru>"
         "<sysinfo>"
         "<cpu_number>%d</cpu_number>"
         "</sysinfo>"
-        "</guru>",
+        "</uGuru>",
         cpu_num());
 
     UNREFERENCED_PARAMETER(ri)
@@ -102,23 +104,35 @@ void fetch_server_state(struct mg_connection *conn,
     TiXmlDocument doc("server.xml");
     TiXmlDocument cfg("solver.xml");
 
+    TiXmlPrinter printer;
+    printer.SetIndent( "\t" );
+
+    TiXmlPrinter printer2;
+    printer2.SetIndent( "\t" );
+
+    //fprintf( stdout, "%s", printer.CStr() );
+
+    //printer.Visit(doc.RootElement());
+
     if (cfg.LoadFile() && doc.LoadFile())
     {
+        doc.Accept( &printer );
+        cfg.Accept( &printer2 );
 
         mg_printf(conn, "%s", standard_xml_reply);
-        mg_printf(conn, "<uguru>"
-            "<%s />"
-            "<%s />"
-            "</uguru>",
-            doc.RootElement()->Value(),
-            cfg.RootElement()->Value());
+        mg_printf(conn, "<uGuru>"
+            "%s"
+            "%s"
+            "</uGuru>",
+            printer.CStr(),
+            printer2.CStr());
     }
     else
     {
         mg_printf(conn, "%s", standard_xml_reply);
-        mg_printf(conn, "<uguru>"
+        mg_printf(conn, "<uGuru>"
             "<msg>Failed to load xml file</msg>"
-            "</uguru>");
+            "</uGuru>");
     }
 
     UNREFERENCED_PARAMETER(ri)
@@ -212,7 +226,7 @@ void query_running_data(struct mg_connection *conn,
             mg_printf(conn,
                 "<uGuru>"
                 "<qstatus>%d</qstatus>"
-                "<error>TaskQueue is aborted.</msg>"
+                "<error>TaskQueue is aborted.</error>"
                 "</uGuru>",
                 g_tqs);
 
@@ -277,8 +291,28 @@ void download_file(struct mg_connection *conn, const struct mg_request_info *ri)
     mg_printf(conn, "%s", standard_xml_reply);
     mg_printf(conn,
         "<uGuru>"
-        "<response>OK</response>"
-        "</uGuru>");
+        "<qstatus>%d</qstatus>"
+        "</uGuru>",
+        g_tqs);
+
+    UNREFERENCED_PARAMETER(ri)
+}
+
+void prepare_files(struct mg_connection *conn, const struct mg_request_info *ri)
+{
+    if (g_tqs == TQS_PENDING)
+    {
+        prepare_files_taskqueue();
+    }
+
+        mg_printf(conn, "%s", standard_xml_reply);
+        mg_printf(conn,
+          "<uGuru>"
+          "<qstatus>%d</qstatus>"
+          "</uGuru>",
+          g_tqs);
+
+
 
     UNREFERENCED_PARAMETER(ri)
 }

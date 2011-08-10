@@ -82,6 +82,8 @@ int all_tasks_to_string(char *buffer);
  */
 int download_task_files(TaskPtr t);
 
+int prepare_files_taskqueue();
+
 #ifdef __cplusplus
 }
 #endif

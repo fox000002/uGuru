@@ -17,30 +17,30 @@ namespace test_UI
 {
     public partial class FormUIDemo : Form
     {
-        private CustomListView lv = new CustomListView();
+        //private CustomListView lv = new CustomListView();
 
         public FormUIDemo()
         {
-            this.lv.Dock = DockStyle.Top;
-            this.lv.Height = this.Height / 2;
-            this.lv.Columns.Add("No", 90, HorizontalAlignment.Left);
-            this.lv.Columns.Add("Column 1", 90, HorizontalAlignment.Center);
-            this.lv.Columns.Add("Column 2", 90, HorizontalAlignment.Center);
-            this.lv.Columns.Add("Column 3", 90, HorizontalAlignment.Center);
+            //this.lv.Dock = DockStyle.Top;
+            //this.lv.Height = this.Height / 2;
+            //this.lv.Columns.Add("No", 90, HorizontalAlignment.Left);
+            //this.lv.Columns.Add("Column 1", 90, HorizontalAlignment.Center);
+            //this.lv.Columns.Add("Column 2", 90, HorizontalAlignment.Center);
+            //this.lv.Columns.Add("Column 3", 90, HorizontalAlignment.Center);
 
-            ListViewItem lvi = new ListViewItem(new string[] { "1", "item1", "item2", "item3" });
-            ListViewGroup lvg = new ListViewGroup("Group1");
+            //ListViewItem lvi = new ListViewItem(new string[] { "1", "item1", "item2", "item3" });
+            //ListViewGroup lvg = new ListViewGroup("Group1");
 
-            lvi.Group = lvg;
+            //lvi.Group = lvg;
 
-            this.lv.Groups.Add(lvg);
-            this.lv.Items.Add(lvi);
+            //this.lv.Groups.Add(lvg);
+            //this.lv.Items.Add(lvi);
 
-            this.Controls.Add(this.lv);
+            //this.Controls.Add(this.lv);
 
-            this.lv.AddEditableCell(-1, 1);
+            //this.lv.AddEditableCell(-1, 1);
 
-            this.lv.AddComboboxCell(-1, 3, new string[] { "item1", "item2", "item3" });
+            //this.lv.AddComboboxCell(-1, 3, new string[] { "item1", "item2", "item3" });
 
             InitializeComponent();
 
@@ -114,6 +114,25 @@ namespace test_UI
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void FormUIDemo_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void bnQuery_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string data = XTTransfer.DownloadData(this.tbUrl.Text);
+
+                this.tbResponse.Text = data;
+            }
+            catch (Exception ex)
+            {
+
             }
         }
     }

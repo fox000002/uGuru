@@ -396,5 +396,33 @@ int download_task_files( TaskPtr t )
     return 0;
 }
 
+int prepare_files_taskqueue()
+{
+    if (is_no_task())
+    {
+        LOG_STRING("No task in the task queue.");
+        return -1;
+    }
+
+    TaskArray::iterator it = tasklist.begin();
+    TaskPtr p = NULL;
+    
+    
+    for(; it != tasklist.end(); ++it)
+    {
+        p= *it;
+    
+        if (0 != download_task_files(p))
+        {
+            return -2;
+        }
+    }
+    
+    //
+    g_tqs = TQS_READY;
+    
+    return 0;
+}
+
 
 }

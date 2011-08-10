@@ -377,6 +377,7 @@ static const struct request_config {
     {MG_NEW_REQUEST, "/submit", &submit_task},
     {MG_NEW_REQUEST, "/query", &query_running_data},
     {MG_NEW_REQUEST, "/terminate", &force_terminate},
+    {MG_NEW_REQUEST, "/prepare", &prepare_files},
     {MG_NEW_REQUEST, "/start", &start_processing},
     {MG_NEW_REQUEST, "/fileupload", &upload_file},
     {MG_NEW_REQUEST, "/filedownload", &download_file},

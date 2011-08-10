@@ -71,4 +71,11 @@ void start_processing(struct mg_connection *conn, const struct mg_request_info *
  */
 void debug_info(struct mg_connection *conn, const struct mg_request_info *ri);
 
+/*! \fn void prepare_files(struct mg_connection *conn, const struct mg_request_info *ri)
+ *  \brief Request callback for /start.
+ *  \param conn mg_connection.
+ *  \param ri mg_request_info.
+ */
+void prepare_files(struct mg_connection *conn, const struct mg_request_info *ri);
+
 #endif /* U_REQUEST_H */

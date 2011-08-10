@@ -37,19 +37,23 @@
             this.button1 = new System.Windows.Forms.Button();
             this.bnNode = new System.Windows.Forms.Button();
             this.bnSubmitTest = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.bnQuery = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbUrl
             // 
-            this.tbUrl.Location = new System.Drawing.Point(87, 213);
+            this.tbUrl.Location = new System.Drawing.Point(111, 132);
             this.tbUrl.Name = "tbUrl";
-            this.tbUrl.Size = new System.Drawing.Size(424, 20);
+            this.tbUrl.Size = new System.Drawing.Size(349, 20);
             this.tbUrl.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(40, 216);
+            this.label1.Location = new System.Drawing.Point(43, 135);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 13);
             this.label1.TabIndex = 1;
@@ -57,7 +61,7 @@
             // 
             // tbData
             // 
-            this.tbData.Location = new System.Drawing.Point(86, 253);
+            this.tbData.Location = new System.Drawing.Point(87, 189);
             this.tbData.Multiline = true;
             this.tbData.Name = "tbData";
             this.tbData.Size = new System.Drawing.Size(472, 63);
@@ -74,7 +78,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(42, 273);
+            this.label2.Location = new System.Drawing.Point(43, 180);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(30, 13);
             this.label2.TabIndex = 4;
@@ -91,7 +95,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(533, 205);
+            this.button1.Location = new System.Drawing.Point(498, 124);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(61, 35);
             this.button1.TabIndex = 6;
@@ -101,7 +105,7 @@
             // 
             // bnNode
             // 
-            this.bnNode.Location = new System.Drawing.Point(43, 164);
+            this.bnNode.Location = new System.Drawing.Point(286, 31);
             this.bnNode.Name = "bnNode";
             this.bnNode.Size = new System.Drawing.Size(89, 33);
             this.bnNode.TabIndex = 7;
@@ -111,19 +115,59 @@
             // 
             // bnSubmitTest
             // 
-            this.bnSubmitTest.Location = new System.Drawing.Point(206, 167);
+            this.bnSubmitTest.Location = new System.Drawing.Point(286, 80);
             this.bnSubmitTest.Name = "bnSubmitTest";
-            this.bnSubmitTest.Size = new System.Drawing.Size(79, 29);
+            this.bnSubmitTest.Size = new System.Drawing.Size(89, 32);
             this.bnSubmitTest.TabIndex = 8;
             this.bnSubmitTest.Text = "Test Submit";
             this.bnSubmitTest.UseVisualStyleBackColor = true;
             this.bnSubmitTest.Click += new System.EventHandler(this.bnSubmitTest_Click);
+            // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(25, 41);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(230, 35);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "First Step: Test availability of remote nodes";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(25, 90);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(158, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Second Step:  Submit your jobs.";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(28, 287);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(173, 13);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "Third Step: Query the status of jobs";
+            // 
+            // bnQuery
+            // 
+            this.bnQuery.Location = new System.Drawing.Point(289, 275);
+            this.bnQuery.Name = "bnQuery";
+            this.bnQuery.Size = new System.Drawing.Size(86, 36);
+            this.bnQuery.TabIndex = 12;
+            this.bnQuery.Text = "Query";
+            this.bnQuery.UseVisualStyleBackColor = true;
+            this.bnQuery.Click += new System.EventHandler(this.bnQuery_Click);
             // 
             // FormUIDemo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(620, 508);
+            this.Controls.Add(this.bnQuery);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.bnSubmitTest);
             this.Controls.Add(this.bnNode);
             this.Controls.Add(this.button1);
@@ -134,7 +178,8 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tbUrl);
             this.Name = "FormUIDemo";
-            this.Text = "Form1";
+            this.Text = "uGuru Client Demo";
+            this.Load += new System.EventHandler(this.FormUIDemo_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -151,6 +196,10 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button bnNode;
         private System.Windows.Forms.Button bnSubmitTest;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button bnQuery;
     }
 }
 
