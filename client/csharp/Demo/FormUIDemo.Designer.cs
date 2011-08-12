@@ -41,6 +41,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.bnQuery = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.lbFilename = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // tbUrl
@@ -69,7 +71,7 @@
             // 
             // tbResponse
             // 
-            this.tbResponse.Location = new System.Drawing.Point(86, 354);
+            this.tbResponse.Location = new System.Drawing.Point(98, 407);
             this.tbResponse.Multiline = true;
             this.tbResponse.Name = "tbResponse";
             this.tbResponse.Size = new System.Drawing.Size(473, 127);
@@ -159,11 +161,31 @@
             this.bnQuery.UseVisualStyleBackColor = true;
             this.bnQuery.Click += new System.EventHandler(this.bnQuery_Click);
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(286, 340);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(92, 46);
+            this.button2.TabIndex = 13;
+            this.button2.Text = "UploadFile";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // lbFilename
+            // 
+            this.lbFilename.AutoSize = true;
+            this.lbFilename.Location = new System.Drawing.Point(37, 357);
+            this.lbFilename.Name = "lbFilename";
+            this.lbFilename.Size = new System.Drawing.Size(0, 13);
+            this.lbFilename.TabIndex = 14;
+            // 
             // FormUIDemo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(620, 508);
+            this.ClientSize = new System.Drawing.Size(645, 561);
+            this.Controls.Add(this.lbFilename);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.bnQuery);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -200,6 +222,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button bnQuery;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label lbFilename;
     }
 }
 

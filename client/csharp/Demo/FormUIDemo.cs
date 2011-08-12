@@ -135,5 +135,29 @@ namespace test_UI
 
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofdlg = new OpenFileDialog();
+
+            DialogResult result = ofdlg.ShowDialog();
+
+            if (DialogResult.OK == result)
+            {
+                try
+                {
+                    byte[] data = File.ReadAllBytes(ofdlg.FileName);
+
+
+                    string resp = XTTransfer.UploadData(this.tbUrl.Text, data);
+
+                    this.tbResponse.Text = resp;
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+        }
     }
 }

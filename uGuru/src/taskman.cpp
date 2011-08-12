@@ -52,6 +52,10 @@ TaskPtr serve_queue()
 {
     TaskPtr t = qu.front();
 
+    LOG_STRING("task %d", t->id);
+    
+    g_tqs = TS_RUNNING;
+    
     if (run_task(t)) // Failed
     {
         LOG_STRING("task %d failed", t->id);
@@ -60,7 +64,7 @@ TaskPtr serve_queue()
 
     qu.pop();
     qu_back.push_back(t);
-
+    
     return t;
 }
 
@@ -112,11 +116,25 @@ int run_task( TaskPtr t )
 
     SolverPtr s = solver_from_id(t->sid);
 
-    sprintf(cmdline, "%s %s\\%s", s->command, t->subdir, s->arg);
+    if (NULL == s)
+    {
+        LOG_STRING("Error find solver %d", t->sid);
+    
+        return -2;
+    }
+    
+    sprintf(cmdline, "%s\\solvers\\%s %s\\%s\\%s", document_root, s->command,
+        document_root, t->subdir, s->arg);
 
     t->ts = TS_RUNNING;
 
-    if (!startProgramCallbackParam(cmdline, t->subdir, TRUE, &callback, t))
+    char wdir[512];
+    
+    sprintf(wdir, "%s\\%s", document_root, t->subdir);
+    
+    LOG_STRING("StartProgram %s", cmdline);
+    
+    if (!startProgramCallbackParam(cmdline, wdir, TRUE, &callback, t))
     {
         t->ts = TS_ABORT;
         return -1;
@@ -412,10 +430,16 @@ int prepare_files_taskqueue()
     {
         p= *it;
     
-        if (0 != download_task_files(p))
-        {
-            return -2;
-        }
+        //if (0 != download_task_files(p))
+        //{
+        //    return -2;
+        //}
+        char lpath[512];
+
+        sprintf(lpath, "%s\\%s", document_root, p->subdir);
+        
+        ::CreateDirectory(lpath, NULL);
+        
     }
     
     //

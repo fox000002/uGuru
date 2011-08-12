@@ -63,7 +63,7 @@ void show_homepage(struct mg_connection *conn, const struct mg_request_info *ri)
         "<a href=\"/server_info\">server infomation</a><br/>"
         "<a href=\"/server_state\">server state</a><br/>"
         "<a href=\"/submit\">submit task</a><br/>"
-        "<a href=\"/start\">prepare files</a><br/>"
+        "<a href=\"/prepare\">prepare files</a><br/>"
         "<a href=\"/start\">start task processing</a><br/>"
         "<a href=\"/query\">query task</a><br/>"
         "<a href=\"/terminate\">terminate</a><br/>"

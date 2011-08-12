@@ -109,6 +109,40 @@ int init_solvers( const char * fn )
     {
         SolverPtr p = new Solver();
 
+        p->id = atoi(solver->Attribute("id"));
+        strcpy(p->name, solver->Attribute("name"));
+
+        strcpy(p->command, solver->FirstChildElement("command")->FirstChild()->Value());
+        strcpy(p->arg, solver->FirstChildElement("command")->FirstAttribute()->Value());
+
+        solvers[p->id] = p;
+     }
+
+     return 0;
+}
+
+int init_solvers_xml(class TiXmlElement * e)
+{
+    TiXmlElement * root = e;
+
+    if (0 == root)
+    {
+        LOG_STRING("Failed to find XML root");
+        return -2;
+    }
+
+    if (strcmp(root->Value(), "Solvers") != 0)
+    {
+        LOG_STRING("Element Solvers is expected, but find : %s", root->Value());
+        return -1;
+    }
+
+
+    for (TiXmlElement *solver=root->FirstChildElement(); solver;
+        solver = solver->NextSiblingElement())
+    {
+        SolverPtr p = new Solver();
+
         p->id = atoi(solver->FirstChildElement("id")->FirstChild()->Value());
         strcpy(p->name, solver->FirstChildElement("name")->FirstChild()->Value());
 
@@ -119,6 +153,7 @@ int init_solvers( const char * fn )
      }
 
      return 0;
+
 }
 
 void clear_solvers()

@@ -4162,135 +4162,7 @@ struct mg_context *mg_start(mg_callback_t user_callback, const char **options) {
 }
 
 
-#ifdef _WIN32
-#define BUFSIZE 4096 
-
-HANDLE hChildStdoutRd, hChildStdoutWr,hStdout;
-
-BOOL CreateChildProcess(VOID);
-VOID ReadFromPipe(struct mg_connection *conn); 
-VOID ErrorExit(LPSTR); 
-
-int mypipe(struct mg_connection *conn) 
-{ 
-    SECURITY_ATTRIBUTES saAttr; 
-    BOOL fSuccess; 
-
-    // Set the bInheritHandle flag so pipe handles are inherited. 
-
-    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
-    saAttr.bInheritHandle = TRUE; 
-    saAttr.lpSecurityDescriptor = NULL; 
-
-    // Get the handle to the current STDOUT. 
-
-    hStdout = GetStdHandle(STD_OUTPUT_HANDLE); 
-
-    // Create a pipe for the child process's STDOUT. 
-
-    if (!CreatePipe(&hChildStdoutRd, &hChildStdoutWr, &saAttr, 0)) 
-        ErrorExit("Stdout pipe creation failed\n"); 
-
-    // Ensure the read handle to the pipe for STDOUT is not inherited.
-    SetHandleInformation( hChildStdoutRd, HANDLE_FLAG_INHERIT, 0);
-
-
-    // Now create the child process. 
-
-    fSuccess = CreateChildProcess();
-    if (! fSuccess) 
-        ErrorExit("Create process failed with"); 
-
-
-    // Read from pipe that is the standard output for child process. 
-
-    ReadFromPipe(conn); 
-
-    return 0; 
-} 
-
-BOOL CreateChildProcess() 
-{ 
-    TCHAR szCmdline[]=TEXT("hello.bat");
-    PROCESS_INFORMATION piProcInfo; 
-    STARTUPINFO siStartInfo;
-    BOOL bFuncRetn = FALSE; 
-
-    // Set up members of the PROCESS_INFORMATION structure. 
-
-    ZeroMemory( &piProcInfo, sizeof(PROCESS_INFORMATION) );
-
-    // Set up members of the STARTUPINFO structure. 
-
-    ZeroMemory( &siStartInfo, sizeof(STARTUPINFO) );
-    siStartInfo.cb = sizeof(STARTUPINFO); 
-    siStartInfo.hStdError = hChildStdoutWr;
-    siStartInfo.hStdOutput = hChildStdoutWr;
-    siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
-
-    // Create the child process. 
-
-    bFuncRetn = CreateProcess(NULL, 
-        szCmdline,     // command line 
-        NULL,          // process security attributes 
-        NULL,          // primary thread security attributes 
-        TRUE,          // handles are inherited 
-        0,             // creation flags 
-        NULL,          // use parent's environment 
-        NULL,          // use parent's current directory 
-        &siStartInfo,  // STARTUPINFO pointer 
-        &piProcInfo);  // receives PROCESS_INFORMATION 
-
-    if (bFuncRetn == 0) 
-        ErrorExit("CreateProcess failed\n");
-    else 
-    {
-        CloseHandle(piProcInfo.hProcess);
-        CloseHandle(piProcInfo.hThread);
-        return bFuncRetn;
-    }
-
-    return FALSE;
-}
-
-
-VOID ReadFromPipe(struct mg_connection *conn) 
-{ 
-    DWORD dwRead, dwWritten; 
-    CHAR chBuf[BUFSIZE]; 
-
-    // Close the write end of the pipe before reading from the 
-    // read end of the pipe. 
-
-    if (!CloseHandle(hChildStdoutWr)) 
-        ErrorExit("Closing handle failed"); 
-
-    // Read output from the child process, and write to parent's STDOUT. 
-    mg_printf(conn,"HTTP/1.1 200 OK\r\n"
-        "Content-Type: text/plain\r\n"
-        "Connection: close\r\n\r\n");
-
-
-    for (;;) 
-    { 
-        if( !ReadFile( hChildStdoutRd, chBuf, BUFSIZE, &dwRead, 
-                NULL) || dwRead == 0) break; 
-
-        mg_write(conn, chBuf, dwRead);
-
-        if (! WriteFile(hStdout, chBuf, dwRead, &dwWritten, NULL)) 
-            break;
-        //mg_printf(conn, "%s", chBuf);
-    } 
-} 
-
-VOID ErrorExit (LPSTR lpszMessage) 
-{ 
-    fprintf(stderr, "%s\n", lpszMessage); 
-    ExitProcess(0); 
-}
-
-#endif
+#include "pipe.h"
 
 void sayhi(struct mg_connection *conn)
 {
@@ -4331,7 +4203,7 @@ static const char *standard_xml_reply = "HTTP/1.1 200 OK\r\n"
 "Content-Type: text/xml\r\n"
 "Connection: keep-alive\r\n\r\n";
 
-static const int SUBMIT_BUFFER_LIMIT = 2000000;
+static const int SUBMIT_BUFFER_LIMIT = 100000000;
 
 void submit_task(struct mg_connection *conn,
                  const struct mg_request_info *ri)
@@ -4423,6 +4295,11 @@ void submit_task(struct mg_connection *conn,
 
 void upload_file(struct mg_connection *conn, const struct mg_request_info *ri)
 {
+    const char * fn = NULL;
+    
+    char var[MAX_PATH];
+    int var_len;
+
     if (0 == strcmp(ri->request_method, "GET"))
     {
         mg_printf(conn, "%s", standard_xml_reply);
@@ -4444,14 +4321,36 @@ void upload_file(struct mg_connection *conn, const struct mg_request_info *ri)
                 "</uGuru>");
             return;
         }
+        
+        /**/
+       
         char *buf = (char *)malloc(conn->content_len * sizeof(char));
         mg_read(conn, buf, conn->content_len);
-
-        FILE *pf = fopen("submit.dat", "w");
+        
+        var_len = mg_get_var(ri->query_string, strlen(ri->query_string), "filename", var, MAX_PATH);
+        
+        if (0 != var_len)
+        {
+            fn = var;
+        }
+        else
+        {
+            fn = "submit.dat";
+        }
+        
+        FILE *pf = fopen(fn, "w+b");
         fwrite(buf, 1, conn->content_len, pf);
         fclose(pf);
 
         free(buf);
+        
+        mg_printf(conn, "%s", standard_xml_reply);
+        mg_printf(conn, 
+            "<uGuru>"
+            "<msg>"
+            "Upload the file successfully."
+            "</msg>"
+            "</uGuru>");
     }
 }
 

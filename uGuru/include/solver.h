@@ -21,6 +21,7 @@ const char * solver_to_string(const struct Solver *s, char *str);
 struct Solver * solver_from_id(int id);
 
 int init_solvers(const char * fn);
+int init_solvers_xml(class TiXmlElement * e);
 
 void clear_solvers();
 

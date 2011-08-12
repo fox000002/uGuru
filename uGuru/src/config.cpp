@@ -9,6 +9,8 @@
 
 #include "config.h"
 
+#include "solver.h"
+
 extern "C" {
 
 char document_root[512];
@@ -76,6 +78,12 @@ int load_config(const char *fn)
 
             return 2;
         }
+        
+        char spath[512];
+        
+        sprintf(spath, "%s\\solver.xml", document_root);
+        
+        init_solvers(spath);
 
         return 0;
     }

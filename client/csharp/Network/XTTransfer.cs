@@ -166,5 +166,51 @@ namespace huys
 
             return x;
         }
+
+
+
+        public static string UploadData(string uri, byte[] data)
+        {
+            string x = null;
+
+            try
+            {
+                //
+                Stream us = null;
+                //Stream ds = null;
+                
+                WebRequest request;
+                //WebResponse response;
+
+                //byte[] data = Encoding.ASCII.GetBytes(sdata);
+
+                request = WebRequest.Create(uri);
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencode";
+                request.ContentLength = data.Length;
+
+                us = request.GetRequestStream();
+
+                us.Write(data, 0, data.Length);
+
+                StreamReader sr = new StreamReader(request.GetResponse().GetResponseStream());
+
+                // Download the Web resource and save it into a data buffer.
+                x = sr.ReadToEnd();
+
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString());
+                x = null;
+            }
+
+            finally
+            {
+
+            }
+
+            return x;
+        }
     }
 }
