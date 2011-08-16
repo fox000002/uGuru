@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "mongoose.h"
 
@@ -8,7 +9,7 @@ int redirect_io()
 {
 	/* Variables 
 	in=UserINPUT */ 
-	char *in = malloc( 20 * sizeof( char ) );
+	char * in = (char *)malloc( 20 * sizeof( char ) );
 	
 	/* Setup the streams */
 	/*freopen( "stdin.log", "w", stdin ); This messes up fgets :( */ 
@@ -25,6 +26,9 @@ int redirect_io()
 	
 	/* Echo out user input */ 
 	puts( in );
+    
+    /* */
+    free(in);
 	
 	/* Return success */ 
 	return 0;

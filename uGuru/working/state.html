@@ -19,7 +19,7 @@
 <tbody><tr><td width="1" rowspan="15" class="vline"><br> </td>
 <td width="500" height="50">
 <table width="400" border="0" align="center" class="space">
-<tbody><tr><td width="100">Queue status:</td><td><div id="qstatus">done</div></td></tr>
+<tbody><tr><td width="100">Queue status:</td><td><div id="qstatus"></div></td></tr>
 <tr><td>Task count: </td><td><div id="tcount">0</div></td></tr>
 </tbody></table>
 </td>
@@ -33,5 +33,16 @@
 </tbody></table></td></tr><tr style="display:none"><td><input></td></tr></tbody></table>
 </form>
 </center>
+
+<script>
+$.get("query", function(data){
+//alert("Data Loaded: " + data);
+//$('#display').html(data);
+var xml = $(data);
+//alert(xml.text());
+$('#qstatus').html(xml.find('qstatus').text());
+
+});
+</script>
 </body>
 </html>

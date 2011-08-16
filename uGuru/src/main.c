@@ -383,6 +383,7 @@ static const struct request_config {
     {MG_NEW_REQUEST, "/filedownload", &download_file},
     {MG_NEW_REQUEST, "/", &show_homepage},
     {MG_NEW_REQUEST, "/debug", &debug_info},
+    {MG_NEW_REQUEST, "/taskid_new", &new_taskid},
     {MG_HTTP_ERROR, "", &test_error},
     {0, NULL, NULL}
 };

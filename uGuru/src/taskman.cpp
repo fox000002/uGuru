@@ -54,7 +54,7 @@ TaskPtr serve_queue()
 
     LOG_STRING("task %d", t->id);
     
-    g_tqs = TS_RUNNING;
+    g_tqs = TQS_BUSY;
     
     if (run_task(t)) // Failed
     {
@@ -64,6 +64,11 @@ TaskPtr serve_queue()
 
     qu.pop();
     qu_back.push_back(t);
+    
+    if (qu.empty())
+    {
+        g_tqs = TQS_FINISHED;
+    }
     
     return t;
 }
@@ -270,11 +275,12 @@ int tasks_from_string( const char * buffer )
 
 //
 static const char * TaskStateText[] = {
-    "TS_READY",
-    "TS_RUNNING",
+	"TS_UNDEFINED",
+	"TS_PENDING",
+	"TS_READY",
+	"TS_RUNNING",
     "TS_FINISHED",
-    "TS_ABORT",
-    "TS_UNDEFINED"
+    "TS_ABORT"
 };
 //
 //
@@ -286,11 +292,16 @@ int front_task_to_string(char * buffer)
         return -1;
     }
 
+    if (qu.empty())
+    {
+        return -2;
+    }
+    
     TaskPtr p = qu.front();
 
     if (p == NULL)
     {
-        return -2;
+        return -3;
     }
 
     int s = (int)p->ts;

@@ -34,7 +34,7 @@
 </tbody></table></td></tr><tr style="display:none"><td><input></td></tr></tbody></table>
 </form>
 
-<form action="" enctype="multipart/form-data" method="POST">
+<form action="" enctype="multipart/form-data" method="POST" onsubmit="doSubmit()">
 <table width="502" border="0" cellspacing="0" cellpadding="0">
 <tbody><tr><td width="7" class="title"><img src="img/arc.gif" width="7" height="24"></td>
 <td width="495" align="left" valign="middle" class="title">添加新任务</td></tr>
@@ -62,7 +62,7 @@
 <br></td><td class="vline" rowspan="15"><br></td></tr>
 <tr><td class="hline"></td></tr>
 <tr><td height="30" class="tail">
-&nbsp;&nbsp;<input name="Save" type="submit" class="button" id="Save" value="添加">
+&nbsp;&nbsp;<input name="Save" type="button" class="button" id="Save" value="添加" onclick="doSubmit();">
 &nbsp;<input name="help" type="button" class="button" id="help" value="帮助" onclick="doHelp();">
 </td></tr><tr><td class="hline"></td>
 </tr>
@@ -76,6 +76,26 @@
     var h = window.location.hostname;
     $('#TASKID').html(t+"-"+h);
   });
+  
+  function doSubmit() {
+    var xmlMessage = 
+'<Tasks>\
+<task from="192.168.88.1:8080">\
+<id>1</id><name>EE</name><sid>1</sid><subdir>EXXX</subdir>\
+</task>\
+</Tasks>';
+  
+    $.ajax({
+    url: 'http://192.168.88.2:8080/submit',
+    type: 'POST',
+    dataType: "xml",
+    data: xmlMessage,
+    processData: false,
+    contentType: 'text/xml; charset="utf-8"'
+    });
+    
+    //alert(xmlData);
+  }
 </script>
 
 </body>

@@ -14,6 +14,8 @@
 #include <stddef.h>
 #include <stdarg.h>
 
+#include <time.h>
+
 #include "mongoose.h"
 
 #ifdef _WIN32
@@ -219,6 +221,8 @@ void query_running_data(struct mg_connection *conn,
                 "<qstatus>%d</qstatus>"
                 "%s"
                 "</uGuru>", g_tqs, buffer);
+                
+            return;
         }
     case  TQS_ABORT:
         {
@@ -342,6 +346,17 @@ void debug_info( struct mg_connection *conn, const struct mg_request_info *ri )
     fclose(pfDebug);
 
     UNREFERENCED_PARAMETER(ri);
+}
+
+void new_taskid(struct mg_connection *conn, const struct mg_request_info *ri)
+{
+    mg_printf(conn, "%s", standard_xml_reply);
+    mg_printf(conn,
+            "<uGuru>"
+            "<taskid>%lu-%0X</taskid>"
+            "</uGuru>",
+            (unsigned long)time(NULL),
+            (unsigned long)ri->remote_ip);
 }
 
 }
