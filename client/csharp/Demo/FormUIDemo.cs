@@ -159,5 +159,35 @@ namespace test_UI
                 }
             }
         }
+
+        private void btnPrepare_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string data = XTTransfer.DownloadData(this.tbUrl.Text);
+
+                this.tbResponse.Text = data;
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void btnDownload_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string data = XTTransfer.DownloadData(this.tbUrl.Text);
+
+                this.tbResponse.Text = data;
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+
     }
 }

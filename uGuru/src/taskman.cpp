@@ -266,6 +266,11 @@ int tasks_from_string( const char * buffer )
 
         add_to_queue(p);
     }
+    
+    if (is_no_task())
+    {
+        return -3;
+    }
 
     // Update TaskQueue status code
     g_tqs = TQS_PENDING;

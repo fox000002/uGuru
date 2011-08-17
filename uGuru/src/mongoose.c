@@ -4261,7 +4261,7 @@ void submit_task(struct mg_connection *conn,
             mg_printf(conn, "%s", standard_xml_reply);
             mg_printf(conn, 
                 "<uGuru>"
-                "<error>Parsing Data Failed!</error>"
+                "<error>Parsing Data or add tasks Failed!</error>"
                 "</uGuru>");
             return;
         }

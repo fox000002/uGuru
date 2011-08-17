@@ -43,6 +43,10 @@
             this.bnQuery = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.lbFilename = new System.Windows.Forms.Label();
+            this.btnPrepare = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.btnDownload = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbUrl
@@ -63,7 +67,7 @@
             // 
             // tbData
             // 
-            this.tbData.Location = new System.Drawing.Point(87, 189);
+            this.tbData.Location = new System.Drawing.Point(87, 177);
             this.tbData.Multiline = true;
             this.tbData.Name = "tbData";
             this.tbData.Size = new System.Drawing.Size(472, 63);
@@ -71,10 +75,11 @@
             // 
             // tbResponse
             // 
-            this.tbResponse.Location = new System.Drawing.Point(98, 407);
+            this.tbResponse.Location = new System.Drawing.Point(111, 475);
             this.tbResponse.Multiline = true;
             this.tbResponse.Name = "tbResponse";
-            this.tbResponse.Size = new System.Drawing.Size(473, 127);
+            this.tbResponse.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.tbResponse.Size = new System.Drawing.Size(650, 127);
             this.tbResponse.TabIndex = 3;
             // 
             // label2
@@ -89,7 +94,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(25, 410);
+            this.label3.Location = new System.Drawing.Point(25, 475);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(55, 13);
             this.label3.TabIndex = 5;
@@ -107,7 +112,7 @@
             // 
             // bnNode
             // 
-            this.bnNode.Location = new System.Drawing.Point(286, 31);
+            this.bnNode.Location = new System.Drawing.Point(305, 31);
             this.bnNode.Name = "bnNode";
             this.bnNode.Size = new System.Drawing.Size(89, 33);
             this.bnNode.TabIndex = 7;
@@ -117,7 +122,7 @@
             // 
             // bnSubmitTest
             // 
-            this.bnSubmitTest.Location = new System.Drawing.Point(286, 80);
+            this.bnSubmitTest.Location = new System.Drawing.Point(305, 80);
             this.bnSubmitTest.Name = "bnSubmitTest";
             this.bnSubmitTest.Size = new System.Drawing.Size(89, 32);
             this.bnSubmitTest.TabIndex = 8;
@@ -127,33 +132,36 @@
             // 
             // label4
             // 
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label4.Location = new System.Drawing.Point(25, 41);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(230, 35);
+            this.label4.Size = new System.Drawing.Size(255, 35);
             this.label4.TabIndex = 9;
             this.label4.Text = "First Step: Test availability of remote nodes";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label5.Location = new System.Drawing.Point(25, 90);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(158, 13);
+            this.label5.Size = new System.Drawing.Size(189, 13);
             this.label5.TabIndex = 10;
             this.label5.Text = "Second Step:  Submit your jobs.";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(28, 287);
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label6.Location = new System.Drawing.Point(25, 344);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(173, 13);
+            this.label6.Size = new System.Drawing.Size(216, 13);
             this.label6.TabIndex = 11;
-            this.label6.Text = "Third Step: Query the status of jobs";
+            this.label6.Text = "Fourth Step: Query the status of jobs";
             // 
             // bnQuery
             // 
-            this.bnQuery.Location = new System.Drawing.Point(289, 275);
+            this.bnQuery.Location = new System.Drawing.Point(268, 332);
             this.bnQuery.Name = "bnQuery";
             this.bnQuery.Size = new System.Drawing.Size(86, 36);
             this.bnQuery.TabIndex = 12;
@@ -163,9 +171,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(286, 340);
+            this.button2.Location = new System.Drawing.Point(459, 282);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(92, 46);
+            this.button2.Size = new System.Drawing.Size(70, 39);
             this.button2.TabIndex = 13;
             this.button2.Text = "UploadFile";
             this.button2.UseVisualStyleBackColor = true;
@@ -179,11 +187,55 @@
             this.lbFilename.Size = new System.Drawing.Size(0, 13);
             this.lbFilename.TabIndex = 14;
             // 
+            // btnPrepare
+            // 
+            this.btnPrepare.Location = new System.Drawing.Point(316, 282);
+            this.btnPrepare.Name = "btnPrepare";
+            this.btnPrepare.Size = new System.Drawing.Size(89, 36);
+            this.btnPrepare.TabIndex = 15;
+            this.btnPrepare.Text = "Prepare";
+            this.btnPrepare.UseVisualStyleBackColor = true;
+            this.btnPrepare.Click += new System.EventHandler(this.btnPrepare_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label7.Location = new System.Drawing.Point(25, 294);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(264, 13);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "Third Step:  prepare task directories and files";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label8.Location = new System.Drawing.Point(25, 409);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(188, 13);
+            this.label8.TabIndex = 17;
+            this.label8.Text = "Fifth Step: Download result files";
+            // 
+            // btnDownload
+            // 
+            this.btnDownload.Location = new System.Drawing.Point(268, 409);
+            this.btnDownload.Name = "btnDownload";
+            this.btnDownload.Size = new System.Drawing.Size(86, 36);
+            this.btnDownload.TabIndex = 18;
+            this.btnDownload.Text = "Download";
+            this.btnDownload.UseVisualStyleBackColor = true;
+            this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
+            // 
             // FormUIDemo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(645, 561);
+            this.ClientSize = new System.Drawing.Size(835, 636);
+            this.Controls.Add(this.btnDownload);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.btnPrepare);
             this.Controls.Add(this.lbFilename);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.bnQuery);
@@ -224,6 +276,10 @@
         private System.Windows.Forms.Button bnQuery;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label lbFilename;
+        private System.Windows.Forms.Button btnPrepare;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnDownload;
     }
 }
 

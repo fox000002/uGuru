@@ -91,7 +91,11 @@
     dataType: "xml",
     data: xmlMessage,
     processData: false,
-    contentType: 'text/xml; charset="utf-8"'
+    contentType: 'text/xml; charset="utf-8"',
+    success: function(response) {
+       var xml =  $(response);
+       alert(xml.text());
+     }
     });
     
     //alert(xmlData);
