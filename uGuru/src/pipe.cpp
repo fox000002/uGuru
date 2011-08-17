@@ -169,13 +169,22 @@ VOID ErrorExit (LPCSTR lpszMessage)
 
 #include <unistd.h>
 
+#include <iostream>
+
+using std::cout;
+using std::cerr;
+using std::endl;
+
+#ifndef MAXLINE 
+#define MAXLINE 200
+#endif
+
 int mypipe(struct mg_connection *conn)
 {
-    int	writepipe[2] = {-1,-1},	/* parent -> child */
-    int  readpipe [2] = {-1,-1};	/* child -> parent */
-    pid_t	childpid;
+    //int	writepipe[2] = {-1,-1},	/* parent -> child */
+    //int readpipe [2] = {-1,-1};	/* child -> parent */
+    //pid_t childpid;
    
-
     return 0;
 }
 

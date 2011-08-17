@@ -1,5 +1,7 @@
 #include "download.h"
 
+#if defined(_WIN32)
+
 #include <windows.h>
 #include <tchar.h>
 
@@ -196,3 +198,14 @@ int download_http_file(const char * host, unsigned int port, const char *rfile, 
 
     return 0;
 }
+
+#else
+
+
+int download_http_file(const char * host, unsigned int port, const char *rfile, const char *lfile)
+{
+
+}
+
+#endif
+

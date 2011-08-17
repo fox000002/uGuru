@@ -24,13 +24,17 @@ all : mingw
 ##########################################################################
 
 CFLAGS=		-W -Wall -std=c99 -pedantic -O2 -fomit-frame-pointer $(COPT)
+CXXFLAGS=       -W -Wall -pedantic -O2 -fomit-frame-pointer $(COPT)
 MAC_SHARED=	-flat_namespace -bundle -undefined suppress
 LINFLAGS=	-ldl -pthread $(CFLAGS)
 LIB=		_$(PROG).so
 
 linux:
-	$(CC) $(LINFLAGS) mongoose.c -shared -fPIC -fpic -o $(LIB)
-	$(CC) $(LINFLAGS) mongoose.c main.c -o $(PROG)
+	gcc -c $(CFLAGS) src/mongoose.c src/main.c -I./include
+	gcc -c $(CFLAGS) src/download.c -I./include
+	g++ -c $(CXXFLAGS) src/*.cpp -Itinyxml -I./include
+	g++ -c $(CXXFLAGS) tinyxml/*.cpp -Itinyxml
+	g++ $(LINFLAGS)	*.o -o $(PROG).exe 
 
 bsd:
 	$(CC) $(CFLAGS) mongoose.c -shared -pthread -fpic -fPIC -o $(LIB)

@@ -1,6 +1,6 @@
 <Configuration>
 <Server>
-    <document_root>F:\uGuru-svn\trunk\uGuru\working</document_root>
+    <document_root>/opt/sources/uGuru/uGuru/working</document_root>
     <port>8080</port>
 </Server>
 <Solvers>

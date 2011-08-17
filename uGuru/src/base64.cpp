@@ -132,9 +132,9 @@ char* BASE64::decode(const char* data, int len, char* dest)
     return dest;
 }
 
-}; // namespace crypto
+} // namespace crypto
 
-}; // namespace huys
+} // namespace huys
 
 
 static huys::crypto::BASE64 engine;

@@ -41,6 +41,14 @@
 
 #include "taskman.h"
 
+#ifndef UNREFERENCED_LOCAL_VARIABLE
+  #define UNREFERENCED_LOCAL_VARIABLE(x) x;
+#endif // UNREFERENCED_LOCAL_VARIABLE
+
+#ifndef UNREFERENCED_PARAMETER
+  #define UNREFERENCED_PARAMETER(x) x;
+#endif // UNREFERENCED_PARAMETER
+
 extern "C" {
 
 static const char *standard_reply = "HTTP/1.1 200 OK\r\n"

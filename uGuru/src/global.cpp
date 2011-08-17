@@ -1,3 +1,5 @@
+#if defined(_WIN32)
+
 #include <windows.h>
 #include <tchar.h>
 #include <stdio.h>
@@ -419,3 +421,49 @@ BOOL startProgramCallbackParam( const char *cmdline, const char *wdir, BOOL bWai
 
 
 }
+
+#else
+
+#include <unistd.h>
+
+#include <stdio.h>
+
+#include "global.h"
+
+void w2printf(const char *format, ...)
+{
+
+}
+
+void odprintf(const char *format, ...)
+{
+
+}
+
+
+void write2file(const char *format, ...)
+{
+
+}
+
+void reset_debug()
+{
+
+}
+
+
+BOOL startProgramCallback( const char *cmdline, const char *wdir, BOOL bWait, PFSpCallback pfc)
+{
+
+	return FALSE;
+}
+
+BOOL startProgramCallbackParam( const char *cmdline, const char *wdir, BOOL bWait, PFSpCallbackParam pfc, void *data)
+{
+
+	return FALSE;
+}
+
+
+
+#endif /* */

@@ -451,6 +451,7 @@ static void start_mongoose(int argc, char *argv[])
     signal(SIGINT, signal_handler);
     
     //++ Load config.xml
+    #if defined(_WIN32)
     GetModuleFileName(NULL, path, sizeof(path));
 
     for (i=strlen(path); i>0; i--)
@@ -467,6 +468,15 @@ static void start_mongoose(int argc, char *argv[])
     sprintf(path_config, "%s\\config.xml", path);
 
     load_config(path_config);
+
+   #else
+
+    sprintf(path_config, "config.xml");
+
+    load_config(path_config);
+
+   #endif
+
 
     /* Disable directory listing */
     set_option(options, "enable_directory_listing", "no");

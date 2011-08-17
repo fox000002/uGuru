@@ -1,4 +1,4 @@
-#include <windows.h>
+//#include <windows.h>
 #include <queue>
 #include <vector>
 #include <string>
@@ -430,6 +430,17 @@ int download_task_files( TaskPtr t )
     return 0;
 }
 
+#if defined(_WIN32)
+int mg_mkdir(const char *path, int mode);
+#else
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <pwd.h>
+#include <unistd.h>
+#include <dirent.h>
+#define mg_mkdir(x,y) mkdir(x,y)
+#endif
+
 int prepare_files_taskqueue()
 {
     if (is_no_task())
@@ -454,7 +465,8 @@ int prepare_files_taskqueue()
 
         sprintf(lpath, "%s\\%s", document_root, p->subdir);
         
-        ::CreateDirectory(lpath, NULL);
+        //::CreateDirectory(lpath, NULL);
+        mg_mkdir(lpath, 0);
         
     }
     

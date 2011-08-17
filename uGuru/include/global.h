@@ -34,6 +34,18 @@
 extern "C" {
 #endif /* __cplusplus */
 
+
+
+
+#ifndef TRUE
+
+typedef int BOOL;
+
+#define TRUE 1
+#define FALSE 0
+
+#endif /*BOOL*/
+
 void w2printf(const char *format, ...);
 
 //////////////////////////////////////////////////////////////////////////

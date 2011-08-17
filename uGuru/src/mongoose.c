@@ -25,6 +25,7 @@
 #define _LARGEFILE_SOURCE // Enable 64-bit file offsets
 #endif
 
+//#if defined (_WIN32)
 /// Disable unused local variables warning.
 #ifndef UNREFERENCED_LOCAL_VARIABLE
   #define UNREFERENCED_LOCAL_VARIABLE(x) x;
@@ -33,6 +34,11 @@
 #ifndef UNREFERENCED_PARAMETER
   #define UNREFERENCED_PARAMETER(x) x;
 #endif // UNREFERENCED_PARAMETER
+//#else
+//#define UNREFERENCED_PARAMETER(x)
+//#define UNREFERENCED_LOCAL_VARIABLE(x)
+//#endif /* _WIN32 */
+
 
 #ifndef _WIN32_WCE // Some ANSI #includes are not available on Windows CE
 #include <sys/types.h>
@@ -1076,7 +1082,7 @@ static int mg_remove(const char *path) {
     return DeleteFileW(wbuf) ? 0 : -1;
 }
 
-static int mg_mkdir(const char *path, int mode) {
+int mg_mkdir(const char *path, int mode) {
     char buf[PATH_MAX];
     wchar_t wbuf[PATH_MAX];
 
@@ -3367,7 +3373,7 @@ static int parse_port_string(const struct vec *vec, struct socket *so) {
 
 static int set_ports_option(struct mg_context *ctx) {
     const char *list = ctx->config[LISTENING_PORTS];
-    //int reuseaddr = 1;
+    int reuseaddr = 1;
     int success = 1;
     SOCKET sock;
     struct vec vec;
@@ -4297,7 +4303,7 @@ void upload_file(struct mg_connection *conn, const struct mg_request_info *ri)
 {
     const char * fn = NULL;
     
-    char var[MAX_PATH];
+    char var[PATH_MAX];
     int var_len;
 
     if (0 == strcmp(ri->request_method, "GET"))
@@ -4327,7 +4333,7 @@ void upload_file(struct mg_connection *conn, const struct mg_request_info *ri)
         char *buf = (char *)malloc(conn->content_len * sizeof(char));
         mg_read(conn, buf, conn->content_len);
         
-        var_len = mg_get_var(ri->query_string, strlen(ri->query_string), "filename", var, MAX_PATH);
+        var_len = mg_get_var(ri->query_string, strlen(ri->query_string), "filename", var, PATH_MAX);
         
         if (0 != var_len)
         {

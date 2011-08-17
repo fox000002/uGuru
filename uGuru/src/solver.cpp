@@ -1,5 +1,5 @@
-#include <windows.h>
-#include <tchar.h>
+//#include <windows.h>
+//#include <tchar.h>
 #include <map>
 
 #include "tinyxml.h"
