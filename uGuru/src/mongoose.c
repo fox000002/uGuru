@@ -4306,7 +4306,7 @@ void upload_file(struct mg_connection *conn, const struct mg_request_info *ri)
     char var[PATH_MAX];
     int var_len;
 
-    if (0 == strcmp(ri->request_method, "GET"))
+    if (0 != strcmp(ri->request_method, "POST"))
     {
         mg_printf(conn, "%s", standard_xml_reply);
         mg_printf(conn, 
@@ -4333,6 +4333,7 @@ void upload_file(struct mg_connection *conn, const struct mg_request_info *ri)
         char *buf = (char *)malloc(conn->content_len * sizeof(char));
         mg_read(conn, buf, conn->content_len);
         
+        /**/
         var_len = mg_get_var(ri->query_string, strlen(ri->query_string), "filename", var, PATH_MAX);
         
         if (0 != var_len)

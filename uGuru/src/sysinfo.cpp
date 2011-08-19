@@ -33,6 +33,8 @@
 
 #include "sysinfo.h"
 
+#include "global.h"
+
 extern "C" {
 
 int is_win()
@@ -65,8 +67,17 @@ int cpu_num()
 
     n = (int)siSysInfo.dwNumberOfProcessors;
 #else
-
-
+    //n = sysconf(_SC_NPROCESSOR_CONF);
+    
+    FILE * pf = popen("/bin/cat /proc/cpuinfo | grep -c '^processor'", "r");
+    char res[128];
+    fread(res, 1, sizeof(res)-1, pf);
+    fclose(pf);
+    
+    LOG_STRING("pipe cpuinfo:: %s", res);
+    
+    n = res[0];
+    
 #endif // _WIN32
 
     return n;
