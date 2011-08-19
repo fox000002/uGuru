@@ -75,8 +75,10 @@ int cpu_num()
     fclose(pf);
     
     LOG_STRING("pipe cpuinfo:: %s", res);
+
+    printf(res);
     
-    n = res[0];
+    n = atoi(res);
     
 #endif // _WIN32
 
