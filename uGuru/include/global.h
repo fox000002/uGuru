@@ -64,7 +64,7 @@ void reset_debug();
 #define LOG_STRING write2file
 #endif
 
-/*
+
 #define CHECK_PTR(p) \
 if (!p) {     \
     delete p; \
@@ -79,8 +79,8 @@ if (!p) {     \
 // argv similar to the ones in the standard main function.
 // This is a specialized version coded specifically for rundll32
 // and is not intended to be used in any other program.
-LPTSTR *WINAPI CommandLineToArgv(LPCTSTR lpCmdLine, int *lpArgc);
-*/
+char ** CommandLineToArgv(const char * lpCmdLine, int *lpArgc);
+
 
 
 typedef void (*PFSpCallback)();

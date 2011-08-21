@@ -201,10 +201,55 @@ int download_http_file(const char * host, unsigned int port, const char *rfile, 
 
 #else
 
+#include <stdio.h>
+#include <curl/curl.h>
+
+#include "global.h"
+
+static size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
+    return fwrite(ptr, size, nmemb, stream);
+}
 
 int download_http_file(const char * host, unsigned int port, const char *rfile, const char *lfile)
 {
+    CURL * curl;
+    CURLcode res;
 
+    char url[512];
+
+    FILE * outfile;
+
+    curl = curl_easy_init();
+
+
+    if (!curl)
+    {
+        LOG_STRING( "Error: Failed to initialize curl.");
+        return -1;
+    }
+
+    outfile = fopen(lfile, "wb");
+
+    if (!outfile)
+    {
+        LOG_STRING( "Error: Failed to open file %s to write.", lfile);
+        return -2;       
+    }
+
+    sprintf(url, "http://%s:%d/%s", host, port, rfile);
+    
+    /* */
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &write_data);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, outfile);
+    
+    /*  */
+    res = curl_easy_perform(curl);
+
+    curl_easy_cleanup(url);
+
+    return 0;
 }
 
 #endif

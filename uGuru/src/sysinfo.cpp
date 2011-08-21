@@ -56,6 +56,18 @@ int is_win32()
     return is_win() && is_32();
 }
 
+const char * os_type()
+{
+    if (is_win32())
+    {
+        return "win32";
+    }
+    else
+    {
+        return "linux32";
+    }
+}
+
 int cpu_num()
 {
     int n = 1;

@@ -36,7 +36,7 @@ void BASE64::encodeblock( unsigned char in[3], unsigned char out[4], int len )
 
 static unsigned char base64_table_pos(unsigned char c)
 {
-    char * p = strrchr(base64_alphabet, c);
+    const char * p = strrchr(base64_alphabet, c);
     return (p - base64_alphabet);
 }
 

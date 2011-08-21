@@ -1,7 +1,7 @@
 #-----------------------------------------------------------------------------
 # 
 #-----------------------------------------------------------------------------
-include_directories (${UGURU_SOURCE_DIR}/tinyxml)
+include_directories (${UGURU_SOURCE_DIR}/include ${UGURU_SOURCE_DIR}/tinyxml)
 
 #-----------------------------------------------------------------------------
 # 
@@ -14,3 +14,12 @@ SET (TI_TEST_SRCS test_tinyxml.cpp)
 add_executable (test_tinyxml ${TI_TEST_SRCS}) 
 
 target_link_libraries (test_tinyxml tinyxml)
+
+
+#-----------------------------------------------------------------------------
+# 
+#-----------------------------------------------------------------------------
+SET (UGURU_GLOBAL_SRCS test_global.cpp ${UGURU_SOURCE_DIR}/src/global.cpp)
+
+add_executable(test_global ${UGURU_GLOBAL_SRCS})
+

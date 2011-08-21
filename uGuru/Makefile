@@ -31,10 +31,10 @@ LIB=		_$(PROG).so
 
 linux:
 	gcc -c $(CFLAGS) src/mongoose.c src/main.c -I./include
-	gcc -c $(CFLAGS) src/download.c -I./include
+	gcc -c $(CFLAGS) src/download.c -I./include -DCURL_STATICLIB
 	g++ -c $(CXXFLAGS) src/*.cpp -Itinyxml -I./include
 	g++ -c $(CXXFLAGS) tinyxml/*.cpp -Itinyxml
-	g++ $(LINFLAGS)	*.o -o $(PROG).exe 
+	g++ $(LINFLAGS)	*.o -o $(PROG).exe -lcurl
 
 bsd:
 	$(CC) $(CFLAGS) mongoose.c -shared -pthread -fpic -fPIC -o $(LIB)
