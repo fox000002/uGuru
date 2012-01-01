@@ -49,5 +49,10 @@ namespace huys
         {
             return XTTransfer.DownloadData("http://" + host + ":" + port + "/terminate");
         }
+        
+        public string UploadData(byte[] data)
+        {
+            return XTTransfer.UploadData("http://" + host + ":" + port + "/fileupload", data);
+        }
     }
 }
