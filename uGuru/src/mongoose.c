@@ -3373,7 +3373,9 @@ static int parse_port_string(const struct vec *vec, struct socket *so) {
 
 static int set_ports_option(struct mg_context *ctx) {
     const char *list = ctx->config[LISTENING_PORTS];
+#if !defined(_WIN32)
     int reuseaddr = 1;
+#endif // !_WIN32
     int success = 1;
     SOCKET sock;
     struct vec vec;
@@ -4299,6 +4301,152 @@ void submit_task(struct mg_connection *conn,
 
 }
 
+const char * extract_boundary(struct mg_connection *conn)
+{
+	const char * target = "boundary=";
+	const char * p = mg_get_header(conn, "Content-Type");
+	const char * pb = strstr(p, target);
+
+	if (0 == pb)
+	{
+		DEBUG_TRACE(("Cannot find boundary in Content-Type!"));
+		return 0;
+	}
+
+	return pb+strlen(target);
+}
+
+const char *extract_content_disposition(const char * str)
+{
+	const char * target_name = "name=";
+	const char * target_filename = "filename=";
+	const char * maxfz = "\"MAX_FILE_SIZE\"";
+
+	const char * p = str;
+	const char * pn = strstr(p, target_name);
+	
+	if (0 == pn)
+	{
+		DEBUG_TRACE(("Cannot find name in Content-Disposition!"));
+		return 0;
+	}
+
+	if (strncmp(maxfz, pn+strlen(target_name), strlen(maxfz)) == 0)
+	{
+		DEBUG_TRACE(("find MAX_FILE_SIZE in Content-Disposition!"));
+		return 0;
+	}
+	
+	const char * pfn = strstr(p, target_filename);
+
+	if (0 == pfn)
+	{
+		DEBUG_TRACE(("Cannot find filename in Content-Disposition!"));
+		return 0;
+	}
+
+	return pfn+strlen(target_filename);
+}
+
+#define CON_DIS_TEXT "Content-Disposition:"
+#define CON_TYP_TEXT "Content-Type:"
+
+void parse_multipart(const char *buffer, int size, const char *boundary)
+{
+	const char * p = buffer;
+	const char * pe = buffer;
+	const char * px = buffer;
+
+	FILE * pf = NULL;
+
+	char tmp[512] = {0};
+
+	int i = 0;
+
+	pe = strchr(p, '\n');
+	px = strchr(p, '\r');
+
+	if (pe > px)
+	{
+		pe = px;
+	}
+
+	//DEBUG_TRACE(("boundary : %s", boundary));
+
+	//strncpy(tmp, p, pe-p);
+
+	//DEBUG_TRACE(("bb : %s", tmp));
+
+	p += 2;
+
+	if (strncmp(boundary, p, strlen(boundary)) == 0)
+	{
+		DEBUG_TRACE(("Find boundary in buffer"));
+	}
+
+	while (p < buffer+size)
+	{
+		p = pe;
+		while (p[0] == '\r' || p[0] == '\n') p++;
+
+		pe = strchr(p, '\n');
+		px = strchr(p, '\r');
+
+		if (pe > px)
+		{
+			pe = px;
+		}
+
+		if (strncmp(CON_DIS_TEXT, p, strlen(CON_DIS_TEXT)) == 0)
+		{
+			DEBUG_TRACE(("Find Content-Disposition in buffer"));
+
+			if ((px = extract_content_disposition(p)) != 0)
+			{
+				memset(tmp, 0, 512);
+
+				strncpy(tmp, px+1, pe-px-2);
+
+				DEBUG_TRACE(("Filename : %s", tmp));
+
+				p = pe;
+				while (p[0] == '\r' || p[0] == '\n') p++;
+
+				pe = strchr(p, '\n');
+				px = strchr(p, '\r');
+
+				if (pe > px)
+				{
+					pe = px;
+				}
+
+				if (strncmp(CON_TYP_TEXT, p, strlen(CON_TYP_TEXT)) == 0)
+				{
+					p = pe;
+					i = 3;
+					while (p[0] == '\r' && i>0)
+					{
+						p++;
+						if (p[0] == '\n') p++;
+
+						i--;
+					}
+
+					pe = strstr(p, boundary);
+
+					if (0 != pe)
+					{
+						pf = fopen(tmp, "w");
+						fwrite(p, 1, pe - p - 4, pf);
+						fclose(pf);
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
 void upload_file(struct mg_connection *conn, const struct mg_request_info *ri)
 {
     const char * fn = NULL;
@@ -4334,20 +4482,29 @@ void upload_file(struct mg_connection *conn, const struct mg_request_info *ri)
         mg_read(conn, buf, conn->content_len);
         
         /**/
-        var_len = mg_get_var(ri->query_string, strlen(ri->query_string), "filename", var, PATH_MAX);
+        if (ri->query_string != 0)
+		{
+		   var_len = mg_get_var(ri->query_string, strlen(ri->query_string), "filename", var, PATH_MAX);
         
-        if (0 != var_len)
-        {
-            fn = var;
-        }
+           if (0 != var_len)
+           {
+              fn = var;
+           }
+           else
+           {
+              fn = "submit.dat";
+           }
+		}
         else
         {
             fn = "submit.dat";
         }
-        
+		   
         FILE *pf = fopen(fn, "w+b");
         fwrite(buf, 1, conn->content_len, pf);
         fclose(pf);
+		
+		parse_multipart(buf, conn->content_len, extract_boundary(conn));
 
         free(buf);
         

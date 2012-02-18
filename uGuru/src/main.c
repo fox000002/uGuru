@@ -422,7 +422,9 @@ static void start_mongoose(int argc, char *argv[])
 {
     //char *options[MAX_OPTIONS];
     int i;
-    //char path[PATH_MAX];
+#if defined(_WIN32)
+    char path[PATH_MAX];
+#endif
     char path_config[PATH_MAX];
     //char * p = 0;
 
