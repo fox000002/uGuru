@@ -348,44 +348,47 @@ BOOL startProgramCallback( const char *cmdline, const char *wdir, BOOL bWait, PF
     char * exe;
     int argc;
     char ** argv;
-    
+
     argv = CommandLineToArgv(cmdline, &argc);
 
     exe = argv[0];
-    
-    
+
+
     /* Attempt to fork and check for errors */
-	if( (pid=fork()) == -1)
+    if( (pid=fork()) == -1)
     {
-		LOG_STRING("Fork error. Exiting.");  /* something went wrong */
-        
+        LOG_STRING("Fork error. Exiting.");  /* something went wrong */
+
         if (pfc)
         {
            pfc();
         }
 
-		return FALSE;        
-	}
+        return FALSE;
+    }
 
 
     if (pid > 0)  // parent
     {
-		waitpid(pid, &status, 0);
-		return status;
+        if (bWait)
+        {
+            waitpid(pid, &status, 0);
+        }
+        return status;
     }
     else if (pid == 0) // child
-    { 
-		if (chdir(wdir) != 0)
+    {
+        if (chdir(wdir) != 0)
         {
             LOG_STRING("Failed to chdir: %s", wdir);
         }
 
-		execvp(exe, argv);
-		exit(1);
-	}
+        execvp(exe, argv);
+        exit(1);
+    }
 
 
-	return FALSE;
+    return FALSE;
 }
 
 BOOL startProgramCallbackParam( const char *cmdline, const char *wdir, BOOL bWait, PFSpCallbackParam pfc, void *data)
@@ -397,43 +400,46 @@ BOOL startProgramCallbackParam( const char *cmdline, const char *wdir, BOOL bWai
     char * exe;
     int argc;
     char ** argv;
-    
+
     argv = CommandLineToArgv(cmdline, &argc);
 
     exe = argv[0];
-    
+
     /* Attempt to fork and check for errors */
-	if( (pid=fork()) == -1)
+    if( (pid=fork()) == -1)
     {
-		LOG_STRING("Fork error. Exiting.");  /* something went wrong */
-        
+        LOG_STRING("Fork error. Exiting.");  /* something went wrong */
+
         if (pfc)
         {
            pfc(data);
         }
 
-		return FALSE;        
-	}
+        return FALSE;
+    }
 
 
     if (pid > 0)  // parent
     {
-		waitpid(pid, &status, 0);
-		return status;
+        if (bWait)
+        {
+            waitpid(pid, &status, 0);
+        }
+        return status;
     }
     else if (pid == 0) // child
-    { 
-		if (chdir(wdir) != 0)
+    {
+        if (chdir(wdir) != 0)
         {
             LOG_STRING("Failed to chdir: %s", wdir);
         }
 
-		execvp(exe, argv);
-		exit(1);
-	}
+        execvp(exe, argv);
+        exit(1);
+    }
 
 
-	return FALSE;
+    return FALSE;
 }
 
 
@@ -448,11 +454,12 @@ class FileHolder
 public:
     FileHolder()
     {
-        int i;
 
         //++
 #if defined(_WIN32)
         GetModuleFileName(NULL, path, sizeof(path));
+
+        int i;
 
         for (i=strlen(path); i>0; i--)
         {
@@ -664,7 +671,7 @@ char ** CommandLineToArgv(const char * lpCmdLine, int *lpArgc)
     // Fill the argument array
     while (nNames < 4)
     {
-        if (*lpSrc == 0 || (*lpSrc == ',' && nNames == 2) || ((*lpSrc == 
+        if (*lpSrc == 0 || (*lpSrc == ',' && nNames == 2) || ((*lpSrc ==
                         ' ' || *lpSrc == '\t') && !bInQuotes))
         {
             // Whitespace not enclosed in quotes signals the start of another argument
