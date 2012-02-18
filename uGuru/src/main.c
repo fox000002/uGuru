@@ -97,7 +97,7 @@ static void die(const char *fmt, ...)
  * Edit the passwords file.
  */
 static int mg_edit_passwords(const char *fname, const char *domain,
-    const char *user, const char *pass) 
+    const char *user, const char *pass)
 {
     struct mg_context *ctx;
     const char *options[] = {"authentication_domain", NULL, NULL};
@@ -162,7 +162,7 @@ static char *sdup(const char *str) {
     return p;
 }
 
-static void set_option(char **options, const char *name, const char *value) 
+static void set_option(char **options, const char *name, const char *value)
 {
     int i;
 
@@ -260,7 +260,7 @@ static const char *standard_reply = "HTTP/1.1 200 OK\r\n"
 //"Connection: close\r\n\r\n";
 
 static void test_get_var(struct mg_connection *conn,
-    const struct mg_request_info *ri) 
+    const struct mg_request_info *ri)
 {
     char *var, *buf;
     size_t buf_len;
@@ -273,7 +273,7 @@ static void test_get_var(struct mg_connection *conn,
     var = buf = NULL;
     cl = mg_get_header(conn, "Content-Length");
     mg_printf(conn, "cl: %p\n", cl);
-    if (!strcmp(ri->request_method, "POST") && cl != NULL) 
+    if (!strcmp(ri->request_method, "POST") && cl != NULL)
     {
         buf_len = atoi(cl);
         buf = malloc(buf_len);
@@ -309,7 +309,7 @@ static void test_get_header(struct mg_connection *conn,
 }
 
 static void test_get_request_info(struct mg_connection *conn,
-    const struct mg_request_info *ri) 
+    const struct mg_request_info *ri)
 {
     int i;
 
@@ -334,10 +334,10 @@ static void test_get_request_info(struct mg_connection *conn,
 }
 
 static void test_error(struct mg_connection *conn,
-    const struct mg_request_info *ri) 
+    const struct mg_request_info *ri)
 {
     mg_printf(conn, "HTTP/1.1 %d XX\r\n"
-		"Content-Type: text/xml\r\n"
+        "Content-Type: text/xml\r\n"
         "Conntection: close\r\n\r\n", ri->status_code);
     mg_printf(conn, "<uGuru><error>%d</error></uGuru>", ri->status_code);
 }
@@ -390,15 +390,15 @@ static const struct request_config {
 
 static void *custom_callback(enum mg_event event,
     struct mg_connection *conn,
-    const struct mg_request_info *request_info) 
+    const struct mg_request_info *request_info)
 {
     int i;
 
-    for (i = 0; req_config[i].uri != NULL; i++) 
+    for (i = 0; req_config[i].uri != NULL; i++)
     {
         if (event == req_config[i].event &&
             (event == MG_HTTP_ERROR ||
-             !strcmp(request_info->uri, req_config[i].uri))) 
+             !strcmp(request_info->uri, req_config[i].uri)))
         {
             req_config[i].func(conn, request_info);
             return "processed";
@@ -422,7 +422,7 @@ static void start_mongoose(int argc, char *argv[])
 {
     //char *options[MAX_OPTIONS];
     int i;
-    char path[PATH_MAX];
+    //char path[PATH_MAX];
     char path_config[PATH_MAX];
     //char * p = 0;
 
@@ -449,7 +449,7 @@ static void start_mongoose(int argc, char *argv[])
     /* Setup signal handler: quit on Ctrl-C */
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
-    
+
     //++ Load config.xml
     #if defined(_WIN32)
     GetModuleFileName(NULL, path, sizeof(path));
@@ -464,7 +464,7 @@ static void start_mongoose(int argc, char *argv[])
     }
 
     //SetCurrentDirectory(path);
-    
+
     sprintf(path_config, "%s\\config.xml", path);
 
     load_config(path_config);
@@ -573,7 +573,7 @@ static void show_error(void)
     MessageBox(NULL, buf, "Error", MB_OK);
 }
 
-static int manage_service(int action) 
+static int manage_service(int action)
 {
     static const char *service_name = "uGuru";
     SC_HANDLE hSCM = NULL, hService = NULL;
@@ -582,12 +582,12 @@ static int manage_service(int action)
     int success = 1;
 
     if ((hSCM = OpenSCManager(NULL, NULL, action == ID_INSTALL_SERVICE ?
-                GENERIC_WRITE : GENERIC_READ)) == NULL) 
+                GENERIC_WRITE : GENERIC_READ)) == NULL)
     {
         success = 0;
         show_error();
-    } 
-    else if (action == ID_INSTALL_SERVICE) 
+    }
+    else if (action == ID_INSTALL_SERVICE)
     {
         GetModuleFileName(NULL, path, sizeof(path));
         strncat(path, " ", sizeof(path));
@@ -596,24 +596,24 @@ static int manage_service(int action)
             SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS,
             SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
             path, NULL, NULL, NULL, NULL, NULL);
-        if (hService) 
+        if (hService)
         {
             ChangeServiceConfig2(hService, SERVICE_CONFIG_DESCRIPTION, &descr);
         }
-        else 
+        else
         {
             show_error();
         }
-    } 
-    else if (action == ID_REMOVE_SERVICE) 
+    }
+    else if (action == ID_REMOVE_SERVICE)
     {
         if ((hService = OpenService(hSCM, service_name, DELETE)) == NULL ||
-            !DeleteService(hService)) 
+            !DeleteService(hService))
         {
             show_error();
         }
-    } 
-    else if ((hService = OpenService(hSCM, service_name,SERVICE_QUERY_STATUS)) == NULL) 
+    }
+    else if ((hService = OpenService(hSCM, service_name,SERVICE_QUERY_STATUS)) == NULL)
     {
         success = 0;
     }
@@ -695,7 +695,7 @@ static LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam,
 }
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR cmdline, int show) {
-    
+
     WNDCLASS cls;
     HWND hWnd;
     MSG msg;

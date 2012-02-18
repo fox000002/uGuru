@@ -23,17 +23,17 @@ all : mingw
 ###                 UNIX build: linux, bsd, mac, rtems
 ##########################################################################
 
-CFLAGS=		-W -Wall -std=c99 -pedantic -O2 -fomit-frame-pointer $(COPT)
-CXXFLAGS=       -W -Wall -pedantic -O2 -fomit-frame-pointer $(COPT)
+CFLAGS=		-g -W -Wall -std=c99 -pedantic -O2 -fomit-frame-pointer $(COPT)
+CXXFLAGS=       -g -W -Wall -pedantic -O2 -fomit-frame-pointer $(COPT)
 MAC_SHARED=	-flat_namespace -bundle -undefined suppress
-LINFLAGS=	-ldl -pthread $(CFLAGS)
+LINFLAGS=	-ldl -pthread -lcurl $(CFLAGS)
 LIB=		_$(PROG).so
 
 linux:
 	gcc -c $(CFLAGS) src/mongoose.c src/main.c -I./include
 	gcc -c $(CFLAGS) src/download.c -I./include -DCURL_STATICLIB
 	g++ -c $(CXXFLAGS) src/*.cpp -Itinyxml -I./include
-	g++ -c $(CXXFLAGS) tinyxml/*.cpp -Itinyxml
+	g++ -c $(CXXFLAGS) -Wno-format tinyxml/*.cpp -Itinyxml
 	g++ $(LINFLAGS)	*.o -o $(PROG).exe -lcurl
 
 bsd:

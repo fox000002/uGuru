@@ -14,14 +14,14 @@ const char * mg_gettime()
     // Get time in seconds
     time( &szClock );
 
-    // Convert time to struct tm form 
+    // Convert time to struct tm form
     //newTime = localtime( &szClock );
 
     // Print local time as a string.
     //p = asctime(newTime);
 
     // format: Www Mmm dd hh:mm:ss yyyy
-	p = ctime(&szClock);
+    p = ctime(&szClock);
 
     // get rid of the tail '\n'
     p[strlen(p)-1] = '\0';
@@ -32,7 +32,7 @@ const char * mg_gettime()
 const char * mg_getdate()
 {
 
-	return NULL;
+    return NULL;
 }
 
 void mg_wait(int secs)
@@ -41,9 +41,9 @@ void mg_wait(int secs)
     while (clock() < endwait) {}
 }
 
-long mg_difftime( long t1, long t2 )
+double mg_difftime( long t1, long t2 )
 {
-	return difftime(t1, t2);	
+    return difftime(t1, t2);
 }
 
 }

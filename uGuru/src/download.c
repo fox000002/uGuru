@@ -234,16 +234,16 @@ int download_http_file(const char * host, unsigned int port, const char *rfile, 
     if (!outfile)
     {
         LOG_STRING( "Error: Failed to open file %s to write.", lfile);
-        return -2;       
+        return -2;
     }
 
     sprintf(url, "http://%s:%d/%s", host, port, rfile);
-    
+
     /* */
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &write_data);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, outfile);
-    
+
     /*  */
     res = curl_easy_perform(curl);
 

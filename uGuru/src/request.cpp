@@ -41,6 +41,8 @@
 
 #include "taskman.h"
 
+#if defined (_WIN32)
+/// Disable unused local variables warning.
 #ifndef UNREFERENCED_LOCAL_VARIABLE
   #define UNREFERENCED_LOCAL_VARIABLE(x) x;
 #endif // UNREFERENCED_LOCAL_VARIABLE
@@ -48,6 +50,10 @@
 #ifndef UNREFERENCED_PARAMETER
   #define UNREFERENCED_PARAMETER(x) x;
 #endif // UNREFERENCED_PARAMETER
+#else
+  #define UNREFERENCED_PARAMETER(x) (void)x;
+  #define UNREFERENCED_LOCAL_VARIABLE(x) (void)x;
+#endif /* _WIN32 */
 
 extern "C" {
 

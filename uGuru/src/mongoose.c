@@ -25,7 +25,7 @@
 #define _LARGEFILE_SOURCE // Enable 64-bit file offsets
 #endif
 
-//#if defined (_WIN32)
+#if defined (_WIN32)
 /// Disable unused local variables warning.
 #ifndef UNREFERENCED_LOCAL_VARIABLE
   #define UNREFERENCED_LOCAL_VARIABLE(x) x;
@@ -34,10 +34,10 @@
 #ifndef UNREFERENCED_PARAMETER
   #define UNREFERENCED_PARAMETER(x) x;
 #endif // UNREFERENCED_PARAMETER
-//#else
-//#define UNREFERENCED_PARAMETER(x)
-//#define UNREFERENCED_LOCAL_VARIABLE(x)
-//#endif /* _WIN32 */
+#else
+  #define UNREFERENCED_PARAMETER(x) (void)x;
+  #define UNREFERENCED_LOCAL_VARIABLE(x) (void)x;
+#endif /* _WIN32 */
 
 
 #ifndef _WIN32_WCE // Some ANSI #includes are not available on Windows CE
@@ -4178,7 +4178,7 @@ void sayhi(struct mg_connection *conn)
 void mg_set_log_callback( struct mg_context * ctx, pf_log_callback callback)
 {
     UNREFERENCED_PARAMETER(ctx)
-    UNREFERENCED_PARAMETER(callback)   
+    UNREFERENCED_PARAMETER(callback)
 }
 
 void mg_set_uri_callback( struct mg_context * ctx, char * uri, pf_uri_callback callback, void *data )
