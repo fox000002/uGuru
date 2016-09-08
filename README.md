@@ -1,4 +1,4 @@
 uGuru
 =====
 
-An easy to use web server forked from mong
+An easy to use web server forked from mongom
